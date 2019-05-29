@@ -1,0 +1,1 @@
+Invalid,NaN,NaN,NaN,2713167815
