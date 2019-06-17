@@ -21,6 +21,10 @@ using Accord.Video.FFMPEG;
 using Accord.Video.VFW;
 using Tobii.Research;
 
+using System.IO;
+using System.Diagnostics;
+using System.Linq;
+
 // This is the code for your desktop app.
 // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
 
@@ -45,7 +49,7 @@ namespace TobiiTesting1
         private int w, h;
         private string m_folder;
         private string filename="";
-
+                
         public Form1()
         {
             InitializeComponent();
@@ -84,6 +88,7 @@ namespace TobiiTesting1
        
 
         //toggle start and stop button
+        /*
         private void start_Click(object sender, EventArgs e)
         {
             if (start.Text == "Start")
@@ -122,6 +127,8 @@ namespace TobiiTesting1
                 }
             }
         }
+        */
+
 
         //eventhandler if new frame is ready
         private void video_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -187,8 +194,17 @@ namespace TobiiTesting1
             Setting up a subscription to gaze data, and collecting and saving the data on the computer running the application.In some cases, the data is also shown live by the application.
             */
             GenerateRecordingFile();
+            
             var eyeTrackers = EyeTrackingOperations_FindAllEyeTrackers.Execute(this);
+            while (eyeTrackers.Count < 1)
+            {
+                System.Threading.Thread.Sleep(2000);
+                eyeTrackers = EyeTrackingOperations_FindAllEyeTrackers.Execute(this);
+            }
             var eyeTracker = eyeTrackers[0];
+
+            CallEyeTrackerManager.Execute(eyeTracker);
+            
             IEyeTracker_GazeDataReceived.Execute(eyeTracker,this);
 
         }
@@ -257,38 +273,55 @@ namespace TobiiTesting1
         }
 
         private void save_Click(object sender, EventArgs e)
-        {
-            saveAvi = new SaveFileDialog();
-            saveAvi.Filter = "Avi Files (*.avi)|*.avi";
-            if (saveAvi.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        {         
+
+            //if streaming then stop
+            if (save.Text == "Record")
             {
-                //int h = videoSource.VideoResolution.FrameSize.Height;
-                //int w = videoSource.VideoResolution.FrameSize.Width;
-                h = 240;
-                w = 320;
-                FileWriter.Open(saveAvi.FileName, w, h, 25, VideoCodec.Default, 5000000);
-                FileWriter.WriteVideoFrame(videoimg);
-                startrecording = true;
+                saveAvi = new SaveFileDialog();
+                saveAvi.Filter = "Avi Files (*.avi)|*.avi";
+                if (saveAvi.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    //int h = videoSource.VideoResolution.FrameSize.Height;
+                    //int w = videoSource.VideoResolution.FrameSize.Width;
+                    h = 240;
+                    w = 320;
+                    FileWriter.Open(saveAvi.FileName, w, h, 25, VideoCodec.Default, 5000000);
+                    FileWriter.WriteVideoFrame(videoimg);
+                    startrecording = true;
 
-                //AVIwriter.Open(saveAvi.FileName, w, h);
-                label2.Text = "start recording";
-                save.Text = "recording";
-                //FileWriter.Close();
-                //FinalVideo = captureDevice.VideoDevice;
-                //FinalVideo.NewFrame += new NewFrameEventHandler(FinalVideo_NewFrame);
-                //FinalVideo.Start();
+                    //AVIwriter.Open(saveAvi.FileName, w, h);
+                    label2.Text = "start recording";
+                    save.Text = "Stop Recording";
+                    //FileWriter.Close();
+                    //FinalVideo = captureDevice.VideoDevice;
+                    //FinalVideo.NewFrame += new NewFrameEventHandler(FinalVideo_NewFrame);
+                    //FinalVideo.Start();
+                }
+                Console.WriteLine(saveAvi.FileName);
+                string t_str = saveAvi.FileName;
+                GenerateRecordingFile(t_str.Replace(".","_"));
             }
+            else
+            {
+                if (videoSource.IsRunning)
+                {
+                    timer1.Enabled = false;
+                    CloseVideoSource();
+                    label2.Text = "Device stopped.";
+                    save.Text = "Record";
+                    FileWriter.Close();
+                    startrecording = false;
+                }
+            }
+            
         }
 
-        private void start_recording_Click(object sender, EventArgs e)
-        {
-            //Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(DateTime.Now)).TotalSeconds;
-            GenerateRecordingFile();
-        }
-        private bool GenerateRecordingFile()
+        
+        private bool GenerateRecordingFile(string filepath="")
         {
             var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
-            this.filename = Timestamp.ToString() + ".txt";
+            this.filename = filepath + "_" + Timestamp.ToString() + ".txt";
 
             if (!System.IO.File.Exists(this.filename))
             {
@@ -310,5 +343,90 @@ namespace TobiiTesting1
                 //this.AVIwriter.Close();
             }
         }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (DeviceExist)
+            {
+                videoSource = new VideoCaptureDevice(videoDevices[comboBox1.SelectedIndex].MonikerString);
+                videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
+
+                CloseVideoSource();
+                videoSource.DesiredFrameSize = new Size(160, 120);
+                //videoSource.DesiredFrameRate = 10;
+                videoSource.Start();
+
+                label2.Text = "Device running...";
+                timer1.Enabled = true;
+            }
+            else
+            {
+                label2.Text = "Error: No Device selected.";
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        class CallEyeTrackerManager
+        {
+            internal static void Execute(IEyeTracker eyeTracker)
+            {
+                if (eyeTracker != null)
+                {
+                    CallEyeTrackerManagerExample(eyeTracker);
+                }
+            }
+            // <BeginExample>
+            private static void CallEyeTrackerManagerExample(IEyeTracker eyeTracker)
+            {
+                string etmStartupMode = "--version";// "usercalibration";// "displayarea";
+                string etmBasePath = Path.GetFullPath(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"),
+                                                                    "TobiiProEyeTrackerManager"));
+                string appFolder = Directory.EnumerateDirectories(etmBasePath, "app*").FirstOrDefault();
+                string executablePath = Path.GetFullPath(Path.Combine(etmBasePath,
+                                                                        appFolder,
+                                                                        "TobiiProEyeTrackerManager.exe"));
+                string arguments = "--device-address=" + eyeTracker.Address + " --mode=" + etmStartupMode;
+                try
+                {
+                    Process etmProcess = new Process();
+                    // Redirect the output stream of the child process.
+                    etmProcess.StartInfo.UseShellExecute = false;
+                    etmProcess.StartInfo.RedirectStandardError = true;
+                    etmProcess.StartInfo.RedirectStandardOutput = true;
+                    etmProcess.StartInfo.FileName = executablePath;
+                    etmProcess.StartInfo.Arguments = arguments;
+                    etmProcess.Start();
+                    string stdOutput = etmProcess.StandardOutput.ReadToEnd();
+
+                    etmProcess.WaitForExit();
+                    int exitCode = etmProcess.ExitCode;
+                    if (exitCode == 0)
+                    {
+                        Console.WriteLine("Eye Tracker Manager was called successfully!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Eye Tracker Manager call returned the error code: {0}", exitCode);
+                        foreach (string line in stdOutput.Split(Environment.NewLine.ToCharArray()))
+                        {
+                            if (line.StartsWith("ETM Error:"))
+                            {
+                                Console.WriteLine(line);
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            // <EndExample>
+        }
+
     }
 }
