@@ -30,6 +30,7 @@ using System.Linq;
 
 namespace TobiiTesting1
 {
+    
     public partial class Form1 : Form
     {
         private bool DeviceExist = false;
@@ -48,8 +49,18 @@ namespace TobiiTesting1
 
         private int w, h;
         private string m_folder;
-        private string filename="";
-                
+        private string trialsavingpath = "";
+        private string avisavingpath = "";
+
+        static string gazedatasavingpath = "";
+        static bool b_recording=false;
+
+        // true means the trial is in use, false means the trial is not in use
+        // start recording: b_trial_locked=true, trial index;
+        // end trial b_trial_locked=false,
+        // start a new trial: b_trial_locked=true
+        private bool b_trial_locked = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -154,6 +165,9 @@ namespace TobiiTesting1
                     videoSource.SignalToStop();
                     videoSource = null;
                 }
+            //close all files and save if not saved.
+
+
         }
 
         //get total received frame at 1 second tick
@@ -166,6 +180,7 @@ namespace TobiiTesting1
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             CloseVideoSource();
+            FileWriter.Close();
         }
 
         private void rfsh_Click_1(object sender, EventArgs e)
@@ -193,7 +208,7 @@ namespace TobiiTesting1
             Running a calibration procedure in which the eye tracker is calibrated to the user.
             Setting up a subscription to gaze data, and collecting and saving the data on the computer running the application.In some cases, the data is also shown live by the application.
             */
-            GenerateRecordingFile();
+            //GenerateRecordingFile();
             
             var eyeTrackers = EyeTrackingOperations_FindAllEyeTrackers.Execute(this);
             while (eyeTrackers.Count < 1)
@@ -227,12 +242,11 @@ namespace TobiiTesting1
         }
         class IEyeTracker_GazeDataReceived
         {
-            private static string filename;
+            
             public static void Execute(IEyeTracker eyeTracker,Form1 formObject)
             {
                 if (eyeTracker != null)
                 {
-                    filename = formObject.filename;
                     GazeData(eyeTracker);
                 }
             }
@@ -267,7 +281,11 @@ namespace TobiiTesting1
                  */
 
                 //System.IO.File.WriteAllText(filename, t_str);
-                System.IO.File.AppendAllText(filename, t_str);
+                if (b_recording)
+                {
+                    System.IO.File.AppendAllText(gazedatasavingpath, t_str);
+                }
+                
             }
             // <EndExample>
         }
@@ -284,8 +302,10 @@ namespace TobiiTesting1
                 {
                     //int h = videoSource.VideoResolution.FrameSize.Height;
                     //int w = videoSource.VideoResolution.FrameSize.Width;
-                    h = 240;
-                    w = 320;
+                    h = videoimg.Height;
+                    w = videoimg.Width;
+                    //h = 240;
+                    //w = 320;
                     FileWriter.Open(saveAvi.FileName, w, h, 25, VideoCodec.Default, 5000000);
                     FileWriter.WriteVideoFrame(videoimg);
                     startrecording = true;
@@ -297,10 +317,11 @@ namespace TobiiTesting1
                     //FinalVideo = captureDevice.VideoDevice;
                     //FinalVideo.NewFrame += new NewFrameEventHandler(FinalVideo_NewFrame);
                     //FinalVideo.Start();
+                    Console.WriteLine(saveAvi.FileName);
+                    avisavingpath = saveAvi.FileName;
+                    GenerateRecordingFile();
                 }
-                Console.WriteLine(saveAvi.FileName);
-                string t_str = saveAvi.FileName;
-                GenerateRecordingFile(t_str.Replace(".","_"));
+                
             }
             else
             {
@@ -312,24 +333,39 @@ namespace TobiiTesting1
                     save.Text = "Record";
                     FileWriter.Close();
                     startrecording = false;
+                    
                 }
             }
-            
+            b_recording = startrecording;
         }
 
         
-        private bool GenerateRecordingFile(string filepath="")
+        private bool GenerateRecordingFile()
         {
-            var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
-            this.filename = filepath + "_" + Timestamp.ToString() + ".txt";
+            //for eyegazedata
+            var systemTimeStamp = EyeTrackingOperations.GetSystemTimeStamp();
+            string t_txtfilename = String.Format("_{0}.txt", systemTimeStamp);
 
-            if (!System.IO.File.Exists(this.filename))
+            //var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+            //string t_txtfilename= "_" + Timestamp.ToString() + ".txt";
+            gazedatasavingpath = avisavingpath.Replace(".", "_") + t_txtfilename;
+            
+            if (!System.IO.File.Exists(gazedatasavingpath))
             {
                 //create file
-                using (var t_file = System.IO.File.Create(this.filename)) ;
+                using (var t_file = System.IO.File.Create(gazedatasavingpath));
             }
 
-            System.IO.File.WriteAllText(this.filename, "DEVICE,X,Y,Z,TimeStamp\r\n");
+            System.IO.File.WriteAllText(gazedatasavingpath, "DEVICE,X,Y,Z,TimeStamp\r\n");
+
+            //for trialsaving data
+            trialsavingpath = gazedatasavingpath.Replace(".txt", "_trials.txt");
+            if (!System.IO.File.Exists(trialsavingpath))
+            {
+                //create file
+                using (var t_file = System.IO.File.Create(trialsavingpath)) ;
+            }
+            
             return true;
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -368,6 +404,32 @@ namespace TobiiTesting1
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void bt_trial_Click(object sender, EventArgs e)
+        {
+            if (!b_recording)
+            {
+                MessageBox.Show("Start Recording First!");
+                return;
+            }
+            var systemTimeStamp = EyeTrackingOperations.GetSystemTimeStamp();
+            string t_str = "";
+            if (b_trial_locked)
+            {
+                //write start time stamp into the file
+                t_str = String.Format("Trial{0},START,{1}\r\n",trialIndex.Text,systemTimeStamp);     
+                bt_trial.Text = "End of Trial " + trialIndex.Text;                
+
+            }
+            else
+            {
+                //write end timestamp into the file
+                t_str = String.Format("Trial{0},START,{1}\r\n", trialIndex.Text, systemTimeStamp);
+                bt_trial.Text = "Start A New Trial";
+            }
+            System.IO.File.AppendAllText(trialsavingpath, t_str);
+            b_trial_locked = !b_trial_locked;
         }
 
         class CallEyeTrackerManager
