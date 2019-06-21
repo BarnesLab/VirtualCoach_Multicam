@@ -25,12 +25,19 @@ using System.IO;
 using System.Diagnostics;
 using System.Linq;
 
+
+using Emgu.CV;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using System.Drawing;
+
+
 // This is the code for your desktop app.
 // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
 
 namespace TobiiTesting1
 {
-    
+
     public partial class Form1 : Form
     {
         private bool DeviceExist = false;
@@ -53,13 +60,19 @@ namespace TobiiTesting1
         private string avisavingpath = "";
 
         static string gazedatasavingpath = "";
-        static bool b_recording=false;
+        static bool b_recording = false;
+
+        static float m_eyegazex, m_eyegazey;
+        static string m_eyegazestr;
 
         // true means the trial is in use, false means the trial is not in use
         // start recording: b_trial_locked=true, trial index;
         // end trial b_trial_locked=false,
         // start a new trial: b_trial_locked=true
         private bool b_trial_locked = false;
+        FormCamera cameraForm = new FormCamera();
+        List<FormCamera> m_cameras = new List<FormCamera>();
+
 
         public Form1()
         {
@@ -79,11 +92,19 @@ namespace TobiiTesting1
                     throw new ApplicationException();
 
                 DeviceExist = true;
+                listView_CameraControl.Items.Clear();
+                int t_index = 0;
                 foreach (FilterInfo device in videoDevices)
                 {
                     comboBox1.Items.Add(device.Name);
+
+                    ListViewItem item1 = new ListViewItem("", 0);
+                    item1.Checked = true;                    
+                    item1.SubItems.Add(device.Name);
+                    item1.SubItems.Add(t_index.ToString());
+                    listView_CameraControl.Items.Add(item1);
+                    t_index++;
                 }
-                comboBox1.SelectedIndex = 0; //make dafault to first cam
             }
             catch (ApplicationException)
             {
@@ -97,61 +118,43 @@ namespace TobiiTesting1
             label2.Text = t_info;
         }
        
-
-        //toggle start and stop button
-        /*
-        private void start_Click(object sender, EventArgs e)
+        private Mat DrawInfoToImage(Mat img,string t_str="test")
         {
-            if (start.Text == "Start")
-            {
-                if (DeviceExist)
-                {
-                    videoSource = new VideoCaptureDevice(videoDevices[comboBox1.SelectedIndex].MonikerString);
-                    videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
-                    
-                    CloseVideoSource();
-                    videoSource.DesiredFrameSize = new Size(160, 120);  
-                    //videoSource.DesiredFrameRate = 10;
-                    videoSource.Start();
-
-                    
-
-                    label2.Text = "Device running...";
-                    start.Text = "&Stop";
-                    timer1.Enabled = true;
-                }
-                else
-                {
-                    label2.Text = "Error: No Device selected.";
-                }
-            }
-            else
-            {
-                if (videoSource.IsRunning)
-                {
-                    timer1.Enabled = false;
-                    CloseVideoSource();
-                    label2.Text = "Device stopped.";
-                    start.Text = "Start";
-                    FileWriter.Close();
-                    startrecording = false;
-                }
-            }
+            CvInvoke.PutText(
+               img,
+               m_eyegazestr,
+               new System.Drawing.Point(10, 80),
+               FontFace.HersheyComplex,
+               0.5,
+               new Bgr(0, 255, 0).MCvScalar);
+            return img;
         }
-        */
-
-
         //eventhandler if new frame is ready
         private void video_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             videoimg = (Bitmap)eventArgs.Frame.Clone();
             //do processing here
-            pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone(); ;
+            pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
 
+            Image<Bgr, Byte> imageCV = new Image<Bgr, byte>(videoimg); //Image Class from Emgu.CV
+            //Mat mat = imageCV.Mat;
+
+            //update the eyegaze data
+
+            Rectangle eyegaze = new System.Drawing.Rectangle((int)m_eyegazex, (int)m_eyegazey, 20,20);//x,y,w,h
+            imageCV.Draw(eyegaze, new Bgr(0, 255, 0));
+            //cameraForm.pictureBox1.Image = imageCV.Bitmap;
+
+            //darw text to image
+            Mat mat = DrawInfoToImage(imageCV.Mat,m_eyegazestr);
+            //cameraForm.pictureBox1.Image = mat.Bitmap;
+
+            //cameraForm.pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
             // save image to file
             if (startrecording)
             {
                 FileWriter.WriteVideoFrame(videoimg);
+                FileWriter.Flush();
             }
             
         }
@@ -186,6 +189,7 @@ namespace TobiiTesting1
         private void rfsh_Click_1(object sender, EventArgs e)
         {
             getCamList();
+            comboBox1.SelectedIndex = 0; //make dafault to first cam
         }
 
 
@@ -270,6 +274,11 @@ namespace TobiiTesting1
                     e.LeftEye.GazeOrigin.PositionInUserCoordinates.Y,
                     e.LeftEye.GazeOrigin.PositionInUserCoordinates.Z,
                     systemTimeStamp);
+                m_eyegazestr = t_str;
+                //project eye tracking data to form image
+                // eye tracking data: screen center point (0,0)
+                m_eyegazex = e.LeftEye.GazeOrigin.PositionInUserCoordinates.X;
+                m_eyegazey = e.LeftEye.GazeOrigin.PositionInUserCoordinates.Y;
                 /* 
                  (
                  "Gaze data with {0} left eye origin at point ({1}, {2}, {3}) in the user coordinate system. TimeStamp: {4}",
@@ -382,13 +391,19 @@ namespace TobiiTesting1
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //open the FormCamera, display the realtime image on the picturebox
+            
+
             if (DeviceExist)
             {
+                CloseVideoSource();
+                //cameraForm.Show();
+
                 videoSource = new VideoCaptureDevice(videoDevices[comboBox1.SelectedIndex].MonikerString);
                 videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
 
-                CloseVideoSource();
-                videoSource.DesiredFrameSize = new Size(160, 120);
+                
+                //videoSource.DesiredFrameSize = new Size(160, 120);//new Size(160, 120);
                 //videoSource.DesiredFrameRate = 10;
                 videoSource.Start();
 
@@ -402,6 +417,11 @@ namespace TobiiTesting1
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+            getCamList();
+        }
+
+        private void show_Click(object sender, EventArgs e)
         {
 
         }
@@ -444,7 +464,7 @@ namespace TobiiTesting1
             // <BeginExample>
             private static void CallEyeTrackerManagerExample(IEyeTracker eyeTracker)
             {
-                string etmStartupMode = "--version";// "usercalibration";// "displayarea";
+                string etmStartupMode = "usercalibration";// "usercalibration";// "displayarea";//"--version"
                 string etmBasePath = Path.GetFullPath(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"),
                                                                     "TobiiProEyeTrackerManager"));
                 string appFolder = Directory.EnumerateDirectories(etmBasePath, "app*").FirstOrDefault();
