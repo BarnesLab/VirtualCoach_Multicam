@@ -59,9 +59,9 @@ namespace TobiiTesting1
             InitializeComponent();
         }
         public Image GetPicture()
-        {
-            return videoimg;
-            //return pictureBox1.Image;
+        { 
+            //return videoimg;
+            return pictureBox1.Image;
         }
         private void FormCameras_Load(object sender, EventArgs e)
         {
