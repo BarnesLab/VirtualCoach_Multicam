@@ -1,0 +1,2 @@
+DEVICE,X,Y,Z,TimeStamp
+Invalid,NaN,NaN,NaN,934844925
