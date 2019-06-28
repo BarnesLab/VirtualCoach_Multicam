@@ -46,8 +46,16 @@ namespace TobiiTesting1
                 //var client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 client= new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 // Connect to the remote endpoint.
-                client.BeginConnect(remoteEp, (ConnectCallback), client);
-                ConnectDone.WaitOne();
+                try
+                {
+                    client.BeginConnect(remoteEp, (ConnectCallback), client);
+                    ConnectDone.WaitOne();
+                }
+                catch
+                {
+                    Console.WriteLine("hello");
+                }
+                
 
                 /* 
                  * device_connect 9ff167
@@ -269,8 +277,9 @@ namespace TobiiTesting1
                
                 var unixTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 Console.Write(local_timestamp +" " + unixTimestamp + "\r\n");
-                var t_str = String.Format("{0},{1}\r\n",
+                var t_str = String.Format("{0},{1},{2}\r\n",
                     response.Replace(" ",",").Replace("\r\n",""),
+                    unixTimestamp,
                     local_timestamp);
                 m_record += t_str;
                 //System.IO.File.AppendAllText(empaticadatasavingpath, t_str);
@@ -296,7 +305,7 @@ namespace TobiiTesting1
                 using (var t_file = System.IO.File.Create(empaticadatasavingpath)) ;
             }
 
-            System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA,TimeStamp\r\n");
+            System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA,UnixTS,TimeStamp\r\n");
 
         }
     }

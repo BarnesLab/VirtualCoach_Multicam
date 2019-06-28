@@ -89,14 +89,24 @@ namespace TobiiTesting1
         {
             videoimg = (Bitmap)eventArgs.Frame.Clone();
             //do processing here
-            pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();            
-
-            // save image to file
-            if (m_startrecording)
+            try
             {
-                FileWriter.WriteVideoFrame(videoimg);
-                FileWriter.Flush();
+                pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
+                // save image to file
+                if (m_startrecording)
+                {
+                    FileWriter.WriteVideoFrame(videoimg);
+                    FileWriter.Flush();
+                }
             }
+            catch
+            {
+                Console.WriteLine("object is used somewhere else");
+            }
+                      
+
+            
+            
 
         }
 

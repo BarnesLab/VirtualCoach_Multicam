@@ -31,7 +31,6 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using System.Drawing;
 
-
 // This is the code for your desktop app.
 // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
 
@@ -75,6 +74,8 @@ namespace TobiiTesting1
         //Form_Empatica empaticaForm;
 
         public bool m_empaticarunning;
+        private CascadeClassifier _cascadeClassifier;
+        
 
         public Form1()
         {
@@ -185,17 +186,40 @@ namespace TobiiTesting1
             {
                 //Bitmap t_img = (Bitmap)m_cameras[comboBox_showcameras.SelectedIndex].GetPicture().Clone();
                 Bitmap t_img = (Bitmap)t_image.Clone();
+
+                
                 Image<Bgr, Byte> imageCV = new Image<Bgr, byte>(t_img);
 
+                if (imageCV != null)
+                {
+                    if (checkBox_face.Checked)
+                    {
+                        var grayframe = imageCV.Convert<Gray, byte>();
+                        var faces = _cascadeClassifier.DetectMultiScale(grayframe, 1.1, 10, Size.Empty); //the actual face detection happens here
+
+
+                        foreach (var face in faces)
+                        {
+                            imageCV.Draw(face, new Bgr(Color.BurlyWood), 3); //the detected face(s) is highlighted here using a box that is drawn around it/them
+
+                        }
+                    }                                   
+
+
+                    Rectangle eyegaze = new System.Drawing.Rectangle((int)(m_eyegazex * t_img.Width), (int)(m_eyegazey * t_img.Height), 20, 20);//x,y,w,h
+                    imageCV.Draw(eyegaze, new Bgr(0, 255, 0));
+
+                    //darw text to image
+
+                    Mat mat = DrawInfoToImage(imageCV.Mat, m_eyegazestr);
+                    //cameraForm.pictureBox1.Image = mat.Bitmap;
+                    pictureBox1.Image = mat.Bitmap;
+                }
+
                 //update the eyegaze data
-                Rectangle eyegaze = new System.Drawing.Rectangle((int)(m_eyegazex * t_img.Width), (int)(m_eyegazey * t_img.Height), 20, 20);//x,y,w,h
-                imageCV.Draw(eyegaze, new Bgr(0, 255, 0));
-
-                //darw text to image
-
-                Mat mat = DrawInfoToImage(imageCV.Mat, m_eyegazestr);
-                //cameraForm.pictureBox1.Image = mat.Bitmap;
-                pictureBox1.Image = mat.Bitmap;
+                //m_eyegazex = 0.5f;
+                //m_eyegazey = 0.3f;
+                
             }
             
 
@@ -218,7 +242,7 @@ namespace TobiiTesting1
             comboBox1.SelectedIndex = 0; //make dafault to first cam
         }
 
-
+        /*
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             // Click on the link below to continue learning how to build a desktop app using WinForms!
@@ -229,7 +253,7 @@ namespace TobiiTesting1
         {
             MessageBox.Show("Thanks!");
         }
-
+        */
         private void button2_Click(object sender, EventArgs e)
         {
             /*
@@ -294,22 +318,34 @@ namespace TobiiTesting1
             private static void EyeTracker_GazeDataReceived(object sender, GazeDataEventArgs e)
             {
                 var local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
-                var t_str = String.Format("{0},{1},{2},{3},{4},{5},{6}\r\n",
+                var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
+
+                var t_str = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}\r\n",
                     e.LeftEye.GazeOrigin.Validity,
                     e.LeftEye.GazeOrigin.PositionInUserCoordinates.X,
                     e.LeftEye.GazeOrigin.PositionInUserCoordinates.Y,
                     e.LeftEye.GazeOrigin.PositionInUserCoordinates.Z,
                     e.LeftEye.GazePoint.PositionOnDisplayArea.X,
                     e.LeftEye.GazePoint.PositionOnDisplayArea.Y,
+                    e.LeftEye.Pupil.PupilDiameter,
+                    e.RightEye.Pupil.PupilDiameter,
+                    UnixTimestamp,
                 local_timestamp);
 
                 
 
-                m_eyegazestr = t_str;
+               
                 //project eye tracking data to form image
                 // eye tracking data: screen center point (0,0)
                 m_eyegazex = e.LeftEye.GazePoint.PositionOnDisplayArea.X;
                 m_eyegazey = e.LeftEye.GazePoint.PositionOnDisplayArea.Y;
+
+                m_eyegazestr = String.Format("{0},{1},{2}",
+                   m_eyegazex,
+                   m_eyegazey,
+                   UnixTimestamp);
+
+
                 //m_eyegazey = e.LeftEye.GazeOrigin.PositionInUserCoordinates.Y;
                 /* 
                  (
@@ -404,7 +440,7 @@ namespace TobiiTesting1
             var local_timestamp = DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
             string t_txtfilename = String.Format("_Tobii_{0}.txt", local_timestamp);
 
-            //var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+            var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
             //string t_txtfilename= "_" + Timestamp.ToString() + ".txt";
             gazedatasavingpath = avisavingpath.Replace(".", "_") + t_txtfilename;
             
@@ -414,14 +450,20 @@ namespace TobiiTesting1
                 using (var t_file = System.IO.File.Create(gazedatasavingpath));
             }
 
-            System.IO.File.WriteAllText(gazedatasavingpath, "DEVICE,X,Y,Z,PDA_X,PDA_Y,TimeStamp\r\n");
+            System.IO.File.WriteAllText(gazedatasavingpath, "DEVICE,X,Y,Z,PDA_X,PDA_Y,Pupil_left,Pupil_right,UnixTS,TimeStamp\r\n");
 
             //for trialsaving data
             trialsavingpath = gazedatasavingpath.Replace(".txt", "_trials.txt");
             if (!System.IO.File.Exists(trialsavingpath))
             {
                 //create file
-                using (var t_file = System.IO.File.Create(trialsavingpath)) ;
+                using (var t_file = System.IO.File.Create(trialsavingpath));
+
+                string t_str = String.Format("Trial{0},Record Start,{1},{2}\r\n", trialIndex.Text,UnixTimestamp, local_timestamp);
+                bt_trial.Text = "Record Start" + trialIndex.Text;
+
+                System.IO.File.AppendAllText(trialsavingpath, t_str);
+                b_trial_locked = !b_trial_locked;
             }
             
             return true;
@@ -497,7 +539,11 @@ namespace TobiiTesting1
             if (t_count>0)
             {
                 timer1.Enabled = true;
+                //_cascadeClassifier = new CascadeClassifier(@".\\haarcascades\\" + "haarcascade_frontalface_alt2.xml");
+                _cascadeClassifier = new CascadeClassifier(@"..\data\haarcascades\haarcascade_frontalface_alt2.xml");
             }
+
+
         }
 
         private void bt_empatica_Click(object sender, EventArgs e)
@@ -509,8 +555,17 @@ namespace TobiiTesting1
             
             if (!m_empaticarunning)
             {
-                AsynchronousClient.StartClient(textBox_empatica.Text);
-                bt_empatica.Text = "Stop Empatica";
+                try
+                {
+                    AsynchronousClient.StartClient(textBox_empatica.Text);
+                    bt_empatica.Text = "Stop Empatica";
+                }
+                catch
+                {
+                    Console.WriteLine("Empatica is not running correctly");
+                    return;
+                }
+                
             }
             else
             {
@@ -539,6 +594,11 @@ namespace TobiiTesting1
             }
         }
 
+        private void checkBox_face_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void bt_trial_Click(object sender, EventArgs e)
         {
             if (!startrecording)
@@ -547,6 +607,8 @@ namespace TobiiTesting1
                 return;
             }
             var local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
+
+
             string t_str = "";
             if (b_trial_locked)
             {
@@ -558,7 +620,7 @@ namespace TobiiTesting1
             else
             {
                 //write end timestamp into the file
-                t_str = String.Format("Trial{0},START,{1}\r\n", trialIndex.Text, local_timestamp);
+                t_str = String.Format("Trial{0},END,{1}\r\n", trialIndex.Text, local_timestamp);
                 bt_trial.Text = "Start A New Trial";
             }
             System.IO.File.AppendAllText(trialsavingpath, t_str);
