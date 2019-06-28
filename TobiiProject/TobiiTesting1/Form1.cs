@@ -68,7 +68,7 @@ namespace TobiiTesting1
         // start recording: b_trial_locked=true, trial index;
         // end trial b_trial_locked=false,
         // start a new trial: b_trial_locked=true
-        private bool b_trial_locked = false;
+        private bool b_trial_locked = true;
         FormCamera cameraForm = new FormCamera();
         List<FormCameras> m_cameras = new List<FormCameras>();
         //Form_Empatica empaticaForm;
@@ -459,10 +459,13 @@ namespace TobiiTesting1
                 //create file
                 using (var t_file = System.IO.File.Create(trialsavingpath));
 
-                string t_str = String.Format("Trial{0},Record Start,{1},{2}\r\n", trialIndex.Text,UnixTimestamp, local_timestamp);
-                bt_trial.Text = "Record Start" + trialIndex.Text;
-
+                string t_str = String.Format("VIDEORECORDING_START,{0},{1}\r\n", UnixTimestamp, local_timestamp);                
                 System.IO.File.AppendAllText(trialsavingpath, t_str);
+
+                t_str = String.Format("Trial{0},START,{1},{2}\r\n", trialIndex.Text, UnixTimestamp, local_timestamp);
+                System.IO.File.AppendAllText(trialsavingpath, t_str);
+                bt_trial.Text = "End the Trial " + trialIndex.Text;
+
                 b_trial_locked = !b_trial_locked;
             }
             
@@ -607,20 +610,20 @@ namespace TobiiTesting1
                 return;
             }
             var local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
-
+            var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
 
             string t_str = "";
             if (b_trial_locked)
             {
                 //write start time stamp into the file
-                t_str = String.Format("Trial{0},START,{1}\r\n",trialIndex.Text, local_timestamp);     
-                bt_trial.Text = "End of Trial " + trialIndex.Text;                
-
+                t_str = String.Format("Trial{0},START,{1},{2}\r\n",trialIndex.Text, UnixTimestamp, local_timestamp);     
+                bt_trial.Text = "End the Trial " + trialIndex.Text;
+                
             }
             else
             {
                 //write end timestamp into the file
-                t_str = String.Format("Trial{0},END,{1}\r\n", trialIndex.Text, local_timestamp);
+                t_str = String.Format("Trial{0},END,{1},{2}\r\n", trialIndex.Text, UnixTimestamp, local_timestamp);
                 bt_trial.Text = "Start A New Trial";
             }
             System.IO.File.AppendAllText(trialsavingpath, t_str);
