@@ -53,7 +53,7 @@ namespace TobiiTesting1
                 }
                 catch
                 {
-                    Console.WriteLine("hello");
+                    Console.WriteLine("start client");
                 }
                 
 
@@ -144,7 +144,19 @@ namespace TobiiTesting1
         {
             m_startsaving = true;
             
-            GenerateRecordingFile(filepath);
+            //GenerateRecordingFile(filepath);
+
+            var local_timestamp = DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
+            empaticadatasavingpath = filepath.Replace(".avi", "_") + "EP.txt";
+
+            if (!System.IO.File.Exists(empaticadatasavingpath))
+            {
+                //create file
+                using (var t_file = System.IO.File.Create(empaticadatasavingpath)) ;
+            }
+
+            System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA\r\n");
+
         }
 
         public static void SavingEverySecond()
@@ -276,12 +288,9 @@ namespace TobiiTesting1
                 var local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
                
                 var unixTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                Console.Write(local_timestamp +" " + unixTimestamp + "\r\n");
-                var t_str = String.Format("{0},{1},{2}\r\n",
-                    response.Replace(" ",",").Replace("\r\n",""),
-                    unixTimestamp,
-                    local_timestamp);
-                m_record += t_str;
+                //Console.Write(local_timestamp +" " + unixTimestamp + "\r\n");
+                //var t_str = String.Format("{0},{1},{2}\r\n",response.Replace(" ",","),unixTimestamp,local_timestamp);
+                m_record += response.Replace(" ", ",");
                 //System.IO.File.AppendAllText(empaticadatasavingpath, t_str);
             }
             
@@ -293,11 +302,9 @@ namespace TobiiTesting1
             //for eyegazedata
             //var systemTimeStamp = EyeTrackingOperations.GetSystemTimeStamp();
             var local_timestamp = DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
-            string t_txtfilename = String.Format("_EP_{0}.txt", local_timestamp);
-
+            //string t_txtfilename = String.Format("_EP_{0}.txt", local_timestamp);
             //var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
-            //string t_txtfilename= "_" + Timestamp.ToString() + ".txt";
-            empaticadatasavingpath = filepath.Replace(".", "_") + t_txtfilename;
+            empaticadatasavingpath = filepath.Replace(".", "_") + "EP.txt";
 
             if (!System.IO.File.Exists(empaticadatasavingpath))
             {
@@ -305,7 +312,7 @@ namespace TobiiTesting1
                 using (var t_file = System.IO.File.Create(empaticadatasavingpath)) ;
             }
 
-            System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA,UnixTS,TimeStamp\r\n");
+            System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA\r\n");
 
         }
     }

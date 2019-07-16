@@ -67,7 +67,6 @@ namespace TobiiTesting1
         {
             CloseVideoSource();
 
-            //videoSource = new VideoCaptureDevice(videoDevices[comboBox1.SelectedIndex].MonikerString);
             videoSource = new VideoCaptureDevice(m_deviceMoniker);
             
             videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
