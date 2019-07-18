@@ -276,7 +276,7 @@ namespace TobiiTesting1
 
         private static void HandleResponseFromEmpaticaBLEServer(string response)
         {
-            Console.Write(response);
+            //Console.Write(response);
             //transfer unixtimestamp to 
 
             //var local_timestamp3 = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
