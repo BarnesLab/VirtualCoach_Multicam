@@ -81,8 +81,13 @@ namespace TobiiTesting1
                 string[] list_empatica_device_management_msg = { "device_list", "device_connect "+ str_empaticaDevice }; //AB2B64,9ff167, "device_disconnect"
 
                 string[] list_empatica_datatype_msg ={
+                    "device_subscribe acc ON",
                     "device_subscribe bvp ON",
-                    "device_subscribe gsr ON" };
+                    "device_subscribe gsr ON",
+                    "device_subscribe ibi ON",
+                    "device_subscribe tmp ON",
+                    "device_subscribe tag ON"
+                };
 
                 /*
                 string [] list_empatica_datatype_msg ={
