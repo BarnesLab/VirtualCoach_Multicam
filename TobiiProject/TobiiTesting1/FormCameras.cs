@@ -52,6 +52,7 @@ namespace TobiiTesting1
         public void StopRecording()
         {
             m_startrecording = false;
+            //wait 0.1 s
             FileWriter.Close();
         }
         public FormCameras()
@@ -92,7 +93,7 @@ namespace TobiiTesting1
             {
                 pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
                 // save image to file
-                if (m_startrecording)
+                if (m_startrecording && FileWriter.IsOpen)
                 {
                     FileWriter.WriteVideoFrame(videoimg);
                     FileWriter.Flush();

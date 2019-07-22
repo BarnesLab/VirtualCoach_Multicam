@@ -69,6 +69,7 @@ namespace TobiiTesting1
             this.label1_score_1 = new System.Windows.Forms.Label();
             this.label1_score_2 = new System.Windows.Forms.Label();
             this.label1_score_3 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -224,7 +225,7 @@ namespace TobiiTesting1
             // bt_empatica
             // 
             this.bt_empatica.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.bt_empatica.Location = new System.Drawing.Point(286, 255);
+            this.bt_empatica.Location = new System.Drawing.Point(258, 255);
             this.bt_empatica.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.bt_empatica.Name = "bt_empatica";
             this.bt_empatica.Size = new System.Drawing.Size(230, 72);
@@ -241,7 +242,7 @@ namespace TobiiTesting1
             // textBox_empatica
             // 
             this.textBox_empatica.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox_empatica.Location = new System.Drawing.Point(524, 274);
+            this.textBox_empatica.Location = new System.Drawing.Point(499, 264);
             this.textBox_empatica.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox_empatica.Name = "textBox_empatica";
             this.textBox_empatica.Size = new System.Drawing.Size(124, 30);
@@ -274,6 +275,7 @@ namespace TobiiTesting1
             this.groupBox1.Controls.Add(this.textBox_empatica);
             this.groupBox1.Controls.Add(this.bt_empatica);
             this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(31, 21);
             this.groupBox1.Name = "groupBox1";
@@ -458,6 +460,16 @@ namespace TobiiTesting1
             this.label1_score_3.TabIndex = 40;
             this.label1_score_3.Text = "Performance 4";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.label9.Location = new System.Drawing.Point(495, 307);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(170, 20);
+            this.label9.TabIndex = 20;
+            this.label9.Text = "acc,bvp,gsr,ibi,tmp,tag ";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -548,6 +560,7 @@ namespace TobiiTesting1
         private System.Windows.Forms.Label label1_score_1;
         private System.Windows.Forms.Label label1_score_2;
         private System.Windows.Forms.Label label1_score_3;
+        private System.Windows.Forms.Label label9;
     }
 }
 

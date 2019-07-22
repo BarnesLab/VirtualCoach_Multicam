@@ -69,4 +69,3 @@ D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.csproj.CopyComplete
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.exe
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.pdb
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.csprojAssemblyReference.cache

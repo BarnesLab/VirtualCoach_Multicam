@@ -6,7 +6,7 @@ Program name:
 
 
 Pre-installed:
-- E4 stream (wifi)
+- E4 stream (wifi) : acc,bvp,gsr,ibi,tmp,tag 
 - TobiiProEyeTrackerManager
 
 Setup:
