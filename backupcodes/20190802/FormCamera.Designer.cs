@@ -1,6 +1,6 @@
 ﻿namespace TobiiTesting1
 {
-    partial class FormCameras
+    partial class FormCamera
     {
         /// <summary>
         /// Required designer variable.
@@ -36,23 +36,25 @@
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1898, 1024);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.Size = new System.Drawing.Size(579, 506);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // FormCameras
+            // FormCamera
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1898, 1024);
+            this.ClientSize = new System.Drawing.Size(579, 506);
             this.Controls.Add(this.pictureBox1);
-            this.Name = "FormCameras";
-            this.Text = "FormCameras";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCameras_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormCameras_FormClosed);
-            this.Load += new System.EventHandler(this.FormCameras_Load);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Name = "FormCamera";
+            this.Text = "FormCamera";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.FormCamera_Load);
+            this.Resize += new System.EventHandler(this.FormCamera_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -60,6 +62,6 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        public System.Windows.Forms.PictureBox pictureBox1;
     }
 }

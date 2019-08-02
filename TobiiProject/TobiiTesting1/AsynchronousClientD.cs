@@ -7,7 +7,7 @@ using Tobii.Research;
 
 namespace TobiiTesting1
 {
-    public static class AsynchronousClient
+    public class AsynchronousClientD
     {
         // The port number for the remote device.
         //device id: 023b64
@@ -17,20 +17,20 @@ namespace TobiiTesting1
         private const int ServerPort = 28000;
 
         // ManualResetEvent instances signal completion.
-        private static readonly ManualResetEvent ConnectDone = new ManualResetEvent(false);
-        private static readonly ManualResetEvent SendDone = new ManualResetEvent(false);
-        private static readonly ManualResetEvent ReceiveDone = new ManualResetEvent(false);
+        private readonly ManualResetEvent ConnectDone = new ManualResetEvent(false);
+        private readonly ManualResetEvent SendDone = new ManualResetEvent(false);
+        private readonly ManualResetEvent ReceiveDone = new ManualResetEvent(false);
 
         // The response from the remote device.
-        private static String _response = String.Empty;
+        private String _response = String.Empty;
 
-        private static Socket client;
-        private static bool m_startsaving;
-        private static string empaticadatasavingpath;
+        private Socket client;
+        private bool m_startsaving;
+        private string empaticadatasavingpath;
 
-        private static string m_record;//empatica data here
+        private string m_record;//empatica data here
 
-        private static string[] list_empatica_datatype_msg ={
+        private string[] list_empatica_datatype_msg ={
                     "device_subscribe acc ON",
                     "device_subscribe bvp ON",
                     "device_subscribe gsr ON",
@@ -39,12 +39,12 @@ namespace TobiiTesting1
                     "device_subscribe tag ON"
                 };
 
-        public static void SetupEmpaticaData()
+        public void SetupEmpaticaData()
         {
 
         }
 
-        public static bool StartClient(string str_empaticaDevice = "AB2B64")
+        public bool StartClient(string str_empaticaDevice = "AB2B64")
         {
             // Connect to a remote device.
             try
@@ -142,7 +142,7 @@ namespace TobiiTesting1
             }
             return true;
         }
-        public static void StopClient()
+        public void StopClient()
         {
             m_startsaving = false;
             Send(client, "device_disconnect" + Environment.NewLine);
@@ -152,7 +152,7 @@ namespace TobiiTesting1
         }
 
 
-        public static void SavingRecord(string filepath)
+        public void SavingRecord(string filepath)
         {
             m_startsaving = true;
             
@@ -171,13 +171,13 @@ namespace TobiiTesting1
 
         }
 
-        public static void SavingEverySecond()
+        public void SavingEverySecond()
         {
             System.IO.File.AppendAllText(empaticadatasavingpath, m_record);
             m_record = "";
         }
 
-        private static void ConnectCallback(IAsyncResult ar)
+        private void ConnectCallback(IAsyncResult ar)
         {
             try
             {
@@ -198,7 +198,7 @@ namespace TobiiTesting1
             }
         }
 
-        private static void Receive(Socket client)
+        private void Receive(Socket client)
         {
             try
             {
@@ -215,7 +215,7 @@ namespace TobiiTesting1
             }
         }
 
-        private static void ReceiveCallback(IAsyncResult ar)
+        private void ReceiveCallback(IAsyncResult ar)
         {
             try
             {
@@ -260,7 +260,7 @@ namespace TobiiTesting1
             }
         }
 
-        private static void Send(Socket client, String data)
+        private void Send(Socket client, String data)
         {
             // Convert the string data to byte data using ASCII encoding.
             byte[] byteData = Encoding.ASCII.GetBytes(data);
@@ -269,7 +269,7 @@ namespace TobiiTesting1
             client.BeginSend(byteData, 0, byteData.Length, 0, SendCallback, client);
         }
 
-        private static void SendCallback(IAsyncResult ar)
+        private void SendCallback(IAsyncResult ar)
         {
             try
             {
@@ -286,9 +286,9 @@ namespace TobiiTesting1
             }
         }
 
-        private static void HandleResponseFromEmpaticaBLEServer(string response)
+        private void HandleResponseFromEmpaticaBLEServer(string response)
         {
-            Console.Write(response);
+            //Console.Write(response);
             //transfer unixtimestamp to 
 
             //var local_timestamp3 = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
@@ -309,7 +309,7 @@ namespace TobiiTesting1
             //Console.Write("all here");
         }
 
-        private static void GenerateRecordingFile(string filepath)
+        private void GenerateRecordingFile(string filepath)
         {
             //for eyegazedata
             //var systemTimeStamp = EyeTrackingOperations.GetSystemTimeStamp();

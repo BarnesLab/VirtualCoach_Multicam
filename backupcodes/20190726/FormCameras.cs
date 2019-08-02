@@ -69,29 +69,15 @@ namespace TobiiTesting1
             CloseVideoSource();
 
             videoSource = new VideoCaptureDevice(m_deviceMoniker);
-
-            videoSource.VideoResolution = selectResolution(videoSource);//new line
-
+            
             videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
 
-            videoSource.DesiredFrameSize = new Size(1920, 1080);
-            //videoSource.DesiredFrameSize = new Size(1920, 120);//new Size(160, 120);
+
+            //videoSource.DesiredFrameSize = new Size(160, 120);//new Size(160, 120);
             //videoSource.DesiredFrameRate = 10;
             videoSource.Start();
 
             m_startrecording = false;
-        }
-
-        private static VideoCapabilities selectResolution(VideoCaptureDevice device)
-        {
-            foreach (var cap in device.VideoCapabilities)
-            {
-                if (cap.FrameSize.Height == 1080)
-                    return cap;
-                if (cap.FrameSize.Width == 1920)
-                    return cap;
-            }
-            return device.VideoCapabilities.Last();
         }
 
         public void SetDeviceMonikerString(string deviceMoniker)

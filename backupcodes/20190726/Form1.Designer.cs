@@ -244,7 +244,7 @@ namespace TobiiTesting1
             // textBox_empatica
             // 
             this.textBox_empatica.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox_empatica.Location = new System.Drawing.Point(527, 264);
+            this.textBox_empatica.Location = new System.Drawing.Point(859, 883);
             this.textBox_empatica.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox_empatica.Name = "textBox_empatica";
             this.textBox_empatica.Size = new System.Drawing.Size(124, 30);
@@ -275,7 +275,6 @@ namespace TobiiTesting1
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.checkBox_empatica_1);
-            this.groupBox1.Controls.Add(this.textBox_empatica);
             this.groupBox1.Controls.Add(this.checkBox_empatica_0);
             this.groupBox1.Controls.Add(this.bt_empatica);
             this.groupBox1.Controls.Add(this.button2);
@@ -477,6 +476,8 @@ namespace TobiiTesting1
             // checkBox_empatica_0
             // 
             this.checkBox_empatica_0.AutoSize = true;
+            this.checkBox_empatica_0.Checked = true;
+            this.checkBox_empatica_0.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox_empatica_0.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.checkBox_empatica_0.Location = new System.Drawing.Point(425, 264);
             this.checkBox_empatica_0.Name = "checkBox_empatica_0";
@@ -488,6 +489,8 @@ namespace TobiiTesting1
             // checkBox_empatica_1
             // 
             this.checkBox_empatica_1.AutoSize = true;
+            this.checkBox_empatica_1.Checked = true;
+            this.checkBox_empatica_1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox_empatica_1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.checkBox_empatica_1.Location = new System.Drawing.Point(425, 303);
             this.checkBox_empatica_1.Name = "checkBox_empatica_1";
@@ -502,6 +505,7 @@ namespace TobiiTesting1
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1494, 1005);
             this.Controls.Add(this.label1_score_3);
+            this.Controls.Add(this.textBox_empatica);
             this.Controls.Add(this.label1_score_2);
             this.Controls.Add(this.label1_score_1);
             this.Controls.Add(this.label1_score_0);

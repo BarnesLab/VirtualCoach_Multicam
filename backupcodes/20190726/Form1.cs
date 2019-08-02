@@ -619,15 +619,13 @@ namespace TobiiTesting1
                 {
                     if (checkBox_empatica_0.Checked)
                     {
-                        //AsynchronousClient.StartClient(checkBox_empatica_0.Text);
-                        m_empatica_0.StartClient(checkBox_empatica_0.Text);
+                        AsynchronousClient.StartClient(checkBox_empatica_0.Text);
                     }
                     if (checkBox_empatica_1.Checked)
                     {
-                        //AsynchronousClient.StartClient(checkBox_empatica_1.Text);
-                        m_empatica_1.StartClient(checkBox_empatica_0.Text);
+                        AsynchronousClient.StartClient(checkBox_empatica_1.Text);
                     }
-                    AsynchronousClient.StartClient(textBox_empatica.Text);
+                    //AsynchronousClient.StartClient(textBox_empatica.Text);
                     bt_empatica.Text = "Stop Empatica";
                 }
                 catch
@@ -639,17 +637,6 @@ namespace TobiiTesting1
             }
             else
             {
-                if (checkBox_empatica_0.Checked)
-                {
-                    //AsynchronousClient.StartClient(checkBox_empatica_0.Text);
-                    m_empatica_0.StopClient();
-                }
-                if (checkBox_empatica_1.Checked)
-                {
-                    //AsynchronousClient.StartClient(checkBox_empatica_1.Text);
-                    m_empatica_1.StopClient();
-                }
-
                 AsynchronousClient.StopClient();
                 bt_empatica.Text = "Start Empatica";
             }
@@ -671,16 +658,6 @@ namespace TobiiTesting1
         {
             if (startrecording)
             {
-                if (checkBox_empatica_0.Checked)
-                {
-                    //AsynchronousClient.StartClient(checkBox_empatica_0.Text);
-                    m_empatica_0.SavingEverySecond();
-                }
-                if (checkBox_empatica_1.Checked)
-                {
-                    //AsynchronousClient.StartClient(checkBox_empatica_1.Text);
-                    m_empatica_1.SavingEverySecond();
-                }
                 AsynchronousClient.SavingEverySecond();
             }
         }
