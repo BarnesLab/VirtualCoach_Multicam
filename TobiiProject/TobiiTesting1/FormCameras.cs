@@ -74,7 +74,7 @@ namespace TobiiTesting1
 
             videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
 
-            videoSource.DesiredFrameSize = new Size(1920, 1080);
+            //videoSource.DesiredFrameSize = new Size(1920, 1080);
             //videoSource.DesiredFrameSize = new Size(1920, 120);//new Size(160, 120);
             //videoSource.DesiredFrameRate = 10;
             videoSource.Start();
