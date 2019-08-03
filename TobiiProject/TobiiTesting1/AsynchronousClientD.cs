@@ -29,6 +29,7 @@ namespace TobiiTesting1
         private string empaticadatasavingpath;
 
         private string m_record;//empatica data here
+        public string m_str_empaticaDevice;
 
         private string[] list_empatica_datatype_msg ={
                     "device_subscribe acc ON",
@@ -44,8 +45,10 @@ namespace TobiiTesting1
 
         }
 
+        //023B64,AB2B64
         public bool StartClient(string str_empaticaDevice = "AB2B64")
         {
+            m_str_empaticaDevice = str_empaticaDevice;
             // Connect to a remote device.
             try
             {
@@ -159,7 +162,7 @@ namespace TobiiTesting1
             //GenerateRecordingFile(filepath);
 
             var local_timestamp = DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
-            empaticadatasavingpath = filepath.Replace(".avi", "_") + "EP.txt";
+            empaticadatasavingpath = filepath.Replace(".avi", "_") + m_str_empaticaDevice + "_EP.txt";
 
             if (!System.IO.File.Exists(empaticadatasavingpath))
             {
