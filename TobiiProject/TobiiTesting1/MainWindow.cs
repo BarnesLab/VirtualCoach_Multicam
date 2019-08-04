@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -36,6 +37,8 @@ namespace TobiiTesting1
         int m_second;
         int m_timerinterval=40;
 
+        private string m_csvfilename;
+        ThermalImageFile th = new ThermalImageFile("thermal.jpg");
         public MainWindow()
         {
             InitializeComponent();
@@ -57,12 +60,6 @@ namespace TobiiTesting1
             IsSrc1Dirty = true;
         }
 
-        public static byte[] GetBytesOfImage(Image img)
-        {
-            ImageConverter converter = new ImageConverter();
-            return (byte[])converter.ConvertTo(img, typeof(byte[]));
-        }
-
         void _updateGuiTimer_Tick(object sender, EventArgs e)
         {
             m_second += m_timerinterval;
@@ -73,16 +70,39 @@ namespace TobiiTesting1
                 {
                     // always lock image data to prevent accessing of the image from other threads.
                     _cam1.GetImage().EnterLock();
-                    pictureBoxSource1.Image = _cam1.GetImage().Image;
-                    videoimg = (Bitmap)_cam1.GetImage().Image;
-
-                    //byte[] arr = GetBytesOfImage(videoimg);
+                    pictureBoxSource1.Image = _cam1.GetImage().Image;                                      
 
                     // save image to file
                     if (m_startrecording && FileWriter.IsOpen)
                     {
+                        videoimg = (Bitmap)_cam1.GetImage().Image;
                         FileWriter.WriteVideoFrame(videoimg, TimeSpan.FromMilliseconds(m_second));
                         FileWriter.Flush();
+
+                        
+                        //ThermalImage th = new ThermalImage();
+                        //byte[] arr = _cam1.GetImage().GetData();
+                        //th.Load(arr);
+                        
+
+                        double pixel_temp = 0;
+                        var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
+                        string line = UnixTimestamp + ",";
+
+                        double[,] pixel_array = _cam1.GetImage().ImageProcessing.GetPixelsArray(); //array containing the raw signal data
+                        for (int y = 0; y < th.Height; y++)
+                        {
+                            for (int x = 0; x < th.Width; x++)
+                            {
+                                int pixel_int = (int)pixel_array[y, x]; //casting the signal value to int
+                                pixel_temp = th.GetValueFromSignal(pixel_int); //converting signal to temperature
+                                line += pixel_temp.ToString("0.00") + ","; //"building" each line
+                            }                            
+                        }
+                        line += "\r\n";
+                        System.IO.File.AppendAllText(m_csvfilename, line);
+                        
+
                     }
 
 
@@ -243,10 +263,18 @@ namespace TobiiTesting1
             w = 80;
 
             FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Default, 5000000);
-            //FileWriter.WriteVideoFrame(videoimg);
+            //FileWriter.WriteVideoFrame(videoimg);           
 
             m_startrecording = true;
             m_second = 0;
+
+            m_csvfilename = videofilepath.Replace(".avi", ".csv");
+            if (!System.IO.File.Exists(m_csvfilename))
+            {
+                //create file
+                using (var t_file = System.IO.File.Create(m_csvfilename)) ;
+            }
+
         }
     }
 }

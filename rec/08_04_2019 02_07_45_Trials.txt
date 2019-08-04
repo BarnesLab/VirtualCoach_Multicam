@@ -1,0 +1,3 @@
+participant,unixtimestamp,localtimestamp,recordtype,status,taskindex,trialindex,duration,score,comment
+Name,1564898868245,08/04/2019 02:07:48.245,VIDEORECORDING,START,NA,NA,NA,NA,NA
+Name,1564898882601,08/04/2019 02:08:02.601,VIDEORECORDING,STOP,NA,NA,NA,NA,NA
