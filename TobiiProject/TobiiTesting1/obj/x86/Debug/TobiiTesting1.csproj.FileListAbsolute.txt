@@ -62,7 +62,6 @@ D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\x86\Deb
 D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\x86\Debug\tr\ZedGraph.resources.dll
 D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\x86\Debug\zh-cn\ZedGraph.resources.dll
 D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\x86\Debug\zh-tw\ZedGraph.resources.dll
-D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\x86\Debug\TobiiTesting1.csprojAssemblyReference.cache
 D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\x86\Debug\TobiiTesting1.DiscoveryDialog.resources
 D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\x86\Debug\TobiiTesting1.Form1.resources
 D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\x86\Debug\TobiiTesting1.FormCamera.resources
@@ -75,3 +74,4 @@ D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\x86\Deb
 D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\x86\Debug\TobiiTesting1.csproj.CopyComplete
 D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\x86\Debug\TobiiTesting1.exe
 D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\x86\Debug\TobiiTesting1.pdb
+D:\Projects\EmpaticaTest\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\x86\Debug\TobiiTesting1.csprojAssemblyReference.cache

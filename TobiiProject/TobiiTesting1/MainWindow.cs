@@ -12,6 +12,7 @@ using Accord.Video;
 using Accord.Video.DirectShow;
 using Accord.Video.FFMPEG;
 
+using System.Threading;
 
 using Flir.Atlas.Image;
 using Flir.Atlas.Live.Device;
@@ -22,7 +23,7 @@ namespace TobiiTesting1
     public partial class MainWindow : Form
     {
         private Camera _cam1;
-        private Timer _updateGuiTimer;
+        //private Timer _updateGuiTimer;
         public int m_index;//index in the listview
 
         private int w = 80;
@@ -34,11 +35,17 @@ namespace TobiiTesting1
 
         private Bitmap videoimg;
 
-        int m_second;
-        int m_timerinterval=40;
+        long StartTick = DateTime.Now.Ticks;
 
-        private string m_csvfilename;
-        ThermalImageFile th = new ThermalImageFile("thermal.jpg");
+        public static string m_csvfilename;
+        public static ThermalImageFile th = new ThermalImageFile("thermal.jpg");
+        public static FileStream m_fs;
+
+        Point[] m_points=new Point[60*80];// w=80,h=60
+
+        public static string m_allcvs;
+        private int ncount = 0;
+        //private string m_imagefolder;
         public MainWindow()
         {
             InitializeComponent();
@@ -48,21 +55,23 @@ namespace TobiiTesting1
             // set default directory where to save the snapshots.
             textBoxImageLocation.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
+            timer1.Enabled = true;
+            //m_timerinterval = timer1.Interval;
             // Create timer to update our UI.
-            _updateGuiTimer = new Timer {Interval = m_timerinterval };
-            _updateGuiTimer.Tick += _updateGuiTimer_Tick;
-            _updateGuiTimer.Start();
-            
+            //_updateGuiTimer = new Timer {Interval = m_timerinterval };
+            //_updateGuiTimer.Tick += _updateGuiTimer_Tick;
+            //_updateGuiTimer.Start();
+
         }
 
         void MainWindow_Src1Changed(object sender, Flir.Atlas.Image.ImageChangedEventArgs e)
         {
             IsSrc1Dirty = true;
         }
-
+        /*
         void _updateGuiTimer_Tick(object sender, EventArgs e)
         {
-            m_second += m_timerinterval;
+            m_second += timer1.Interval;
             if (IsSrc1Dirty && _cam1 != null)
             {
                 // a refresh is needed of source 1
@@ -121,7 +130,7 @@ namespace TobiiTesting1
             }
             
         }
-
+        */
         public void CloseVideoSource()
         {
             if (_cam1 != null)
@@ -230,6 +239,7 @@ namespace TobiiTesting1
                 _cam1.ConnectionStatusChanged -= _cam1_ConnectionStatusChanged;
                 _cam1.Disconnect();
             }
+            th.Dispose();
         }
         
         private void buttonDisconnectSrc1_Click(object sender, EventArgs e)
@@ -244,7 +254,13 @@ namespace TobiiTesting1
             m_startrecording = false;
             //wait 0.1 s
             FileWriter.Close();
-            m_second = 0;
+            StartTick = DateTime.Now.Ticks;
+
+            timer2.Enabled = false;
+
+            System.IO.File.AppendAllText(m_csvfilename, m_allcvs);
+            m_allcvs = "";
+            
         }
         private void MainWindow_Load(object sender, EventArgs e)
         {
@@ -262,19 +278,125 @@ namespace TobiiTesting1
             h = 60;
             w = 80;
 
-            FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Default, 5000000);
-            //FileWriter.WriteVideoFrame(videoimg);           
+            m_allcvs = "";
+            FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Default, 1000000);
+            //FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Raw);
+            //FileWriter.Open(videofilepath, w, h);
 
             m_startrecording = true;
-            m_second = 0;
+            StartTick = DateTime.Now.Ticks;
 
             m_csvfilename = videofilepath.Replace(".avi", ".csv");
-            if (!System.IO.File.Exists(m_csvfilename))
-            {
-                //create file
-                using (var t_file = System.IO.File.Create(m_csvfilename)) ;
-            }
 
+            //m_imagefolder = videofilepath.Replace(".avi", "_img");
+            //System.IO.Directory.CreateDirectory(m_imagefolder);
+            if (checkBox_csv.Checked)
+            {
+                if (!System.IO.File.Exists(m_csvfilename))
+                {
+                    //create file
+                    using (var t_file = System.IO.File.Create(m_csvfilename)) ;
+                }
+                //m_fs= new FileStream(m_csvfilename, FileMode.Open, FileAccess.Write,FileShare.ReadWrite);
+            }
+            timer2.Enabled = true;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+           
+            if (IsSrc1Dirty && _cam1 != null)
+            {
+                //Console.Write("count" + ncount++);
+                // a refresh is needed of source 1
+                try
+                {
+                    // always lock image data to prevent accessing of the image from other threads.
+                    _cam1.GetImage().EnterLock();
+                    pictureBoxSource1.Image = _cam1.GetImage().Image;
+
+                    // save image to file
+                    if (m_startrecording && FileWriter.IsOpen)
+                    {
+                        //StartTick;
+
+                        long currentTick = DateTime.Now.Ticks;
+                        var frameOffset = new TimeSpan(currentTick - StartTick);
+
+                        //videoimg = (Bitmap)_cam1.GetImage().Image;
+                        videoimg = (Bitmap)pictureBoxSource1.Image.Clone();
+                        FileWriter.WriteVideoFrame(videoimg, frameOffset);
+                        //Console.Write("timespan"+m_second);
+                        //FileWriter.WriteVideoFrame(videoimg);
+                        FileWriter.Flush();
+
+                        if (checkBox_csv.Checked)
+                        {
+                            
+                            double[,] pixel_array = _cam1.GetImage().ImageProcessing.GetPixelsArray(); //array containing the raw signal data
+                            Thread t_thread = new Thread(()=>SaveToCsv(pixel_array));
+                            t_thread.Start();
+                        }
+                        
+                    }
+                }
+                catch (Exception)
+                {
+
+
+                }
+                finally
+                {
+                    // We are done with the image data object, release.
+                    _cam1.GetImage().ExitLock();
+                    //IsSrc1Dirty = false;
+                }
+            }
+        }
+
+        public async void SaveToCsv(double[,] pixel_array)
+        {
+            var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
+
+            //_cam1.GetImage().SaveSnapshot(m_imagefolder+"\\"+ UnixTimestamp);
+            //ThermalImage th = new ThermalImage();
+            //byte[] arr = _cam1.GetImage().GetData();
+            //th.Load(arr);
+
+
+            double pixel_temp = 0;
+            string line = UnixTimestamp + ",";
+
+            //double[,] pixel_array = _cam1.GetImage().ImageProcessing.GetPixelsArray(); //array containing the raw signal data
+            for (int y = 0; y < th.Height; y++)
+            {
+                for (int x = 0; x < th.Width; x++)
+                {
+                    int pixel_int = (int)pixel_array[y, x]; //casting the signal value to int
+                    pixel_temp = th.GetValueFromSignal(pixel_int); //converting signal to temperature
+                    line += pixel_temp.ToString("0.00") + ","; //"building" each line
+                }
+            }
+            line += "\r\n";
+            m_allcvs += line;
+            //System.IO.File.AppendAllText(m_csvfilename, line);
+            /*
+            byte[] encodedText = Encoding.Unicode.GetBytes(line);
+
+            using (FileStream sourceStream = new FileStream(m_csvfilename,
+                FileMode.Append, FileAccess.Write, FileShare.None,
+                bufferSize: 4096, useAsync: true))
+            {
+                await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);
+            };
+            */
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            string t_str = m_allcvs;
+            m_allcvs = "";
+            System.IO.File.AppendAllText(m_csvfilename, t_str);
         }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonSource1 = new System.Windows.Forms.Button();
             this.pictureBoxSource1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -36,6 +37,9 @@
             this.buttonSaveImage = new System.Windows.Forms.Button();
             this.buttonDisconnectSrc1 = new System.Windows.Forms.Button();
             this.labelStatusSrc1 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.checkBox_csv = new System.Windows.Forms.CheckBox();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSource1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -116,11 +120,34 @@
             this.labelStatusSrc1.TabIndex = 5;
             this.labelStatusSrc1.Text = "Disconnected";
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 40;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // checkBox_csv
+            // 
+            this.checkBox_csv.AutoSize = true;
+            this.checkBox_csv.Checked = true;
+            this.checkBox_csv.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_csv.Location = new System.Drawing.Point(178, 36);
+            this.checkBox_csv.Name = "checkBox_csv";
+            this.checkBox_csv.Size = new System.Drawing.Size(85, 17);
+            this.checkBox_csv.TabIndex = 6;
+            this.checkBox_csv.Text = "SaveToCSV";
+            this.checkBox_csv.UseVisualStyleBackColor = true;
+            // 
+            // timer2
+            // 
+            this.timer2.Interval = 2000;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(436, 490);
+            this.Controls.Add(this.checkBox_csv);
             this.Controls.Add(this.labelStatusSrc1);
             this.Controls.Add(this.buttonDisconnectSrc1);
             this.Controls.Add(this.buttonSaveImage);
@@ -149,6 +176,9 @@
         private System.Windows.Forms.Button buttonSaveImage;
         private System.Windows.Forms.Button buttonDisconnectSrc1;
         private System.Windows.Forms.Label labelStatusSrc1;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.CheckBox checkBox_csv;
+        private System.Windows.Forms.Timer timer2;
     }
 }
 
