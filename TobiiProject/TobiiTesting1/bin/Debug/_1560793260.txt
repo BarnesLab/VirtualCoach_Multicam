@@ -1,3 +1,0 @@
-DEVICE,X,Y,Z,TimeStamp
-Invalid,NaN,NaN,NaN,3722982875
-Invalid,NaN,NaN,NaN,3734771158
