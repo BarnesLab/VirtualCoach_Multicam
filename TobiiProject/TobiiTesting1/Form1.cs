@@ -208,46 +208,53 @@ namespace TobiiTesting1
                 return;
             }
 
-            Image t_image = m_cameras[comboBox_showcameras.SelectedIndex].GetPicture();
-            if (t_image != null)
+            pictureBox1.Image = m_cameras[comboBox_showcameras.SelectedIndex].GetPicture();
+
+            if (false)//testing the calibration
             {
-                //Bitmap t_img = (Bitmap)m_cameras[comboBox_showcameras.SelectedIndex].GetPicture().Clone();
-                Bitmap t_img = (Bitmap)t_image.Clone();
+                Image t_image = m_cameras[comboBox_showcameras.SelectedIndex].GetPicture();
 
-                
-                Image<Bgr, Byte> imageCV = new Image<Bgr, byte>(t_img);
-
-                if (imageCV != null)
+                if (t_image != null)
                 {
-                    if (checkBox_face.Checked)
+                    //Bitmap t_img = (Bitmap)m_cameras[comboBox_showcameras.SelectedIndex].GetPicture().Clone();
+                    Bitmap t_img = (Bitmap)t_image.Clone();
+
+
+                    Image<Bgr, Byte> imageCV = new Image<Bgr, byte>(t_img);
+
+                    if (imageCV != null)
                     {
-                        var grayframe = imageCV.Convert<Gray, byte>();
-                        var faces = _cascadeClassifier.DetectMultiScale(grayframe, 1.1, 10, Size.Empty); //the actual face detection happens here
-
-
-                        foreach (var face in faces)
+                        if (checkBox_face.Checked)
                         {
-                            imageCV.Draw(face, new Bgr(Color.BurlyWood), 3); //the detected face(s) is highlighted here using a box that is drawn around it/them
+                            var grayframe = imageCV.Convert<Gray, byte>();
+                            var faces = _cascadeClassifier.DetectMultiScale(grayframe, 1.1, 10, Size.Empty); //the actual face detection happens here
 
+
+                            foreach (var face in faces)
+                            {
+                                imageCV.Draw(face, new Bgr(Color.BurlyWood), 3); //the detected face(s) is highlighted here using a box that is drawn around it/them
+
+                            }
                         }
-                    }                                   
 
 
-                    Rectangle eyegaze = new System.Drawing.Rectangle((int)(m_eyegazex * t_img.Width), (int)(m_eyegazey * t_img.Height), 20, 20);//x,y,w,h
-                    imageCV.Draw(eyegaze, new Bgr(0, 255, 0));
+                        Rectangle eyegaze = new System.Drawing.Rectangle((int)(m_eyegazex * t_img.Width), (int)(m_eyegazey * t_img.Height), 20, 20);//x,y,w,h
+                        imageCV.Draw(eyegaze, new Bgr(0, 255, 0));
 
-                    //darw text to image
+                        //darw text to image
 
-                    Mat mat = DrawInfoToImage(imageCV.Mat, m_eyegazestr);
-                    //cameraForm.pictureBox1.Image = mat.Bitmap;
-                    pictureBox1.Image = mat.Bitmap;
+                        Mat mat = DrawInfoToImage(imageCV.Mat, m_eyegazestr);
+                        //cameraForm.pictureBox1.Image = mat.Bitmap;
+                        pictureBox1.Image = mat.Bitmap;
+                    }
+
+                    //update the eyegaze data
+                    //m_eyegazex = 0.5f;
+                    //m_eyegazey = 0.3f;
+
                 }
-
-                //update the eyegaze data
-                //m_eyegazex = 0.5f;
-                //m_eyegazey = 0.3f;
-                
             }
+           
             
 
         }

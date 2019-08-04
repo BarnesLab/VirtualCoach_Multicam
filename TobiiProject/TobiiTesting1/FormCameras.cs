@@ -16,16 +16,13 @@ using Tobii.Research;
 
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 
 
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-
-using Flir.Atlas.Image;
-using Flir.Atlas.Live.Device;
-using Flir.Atlas.Live.Discovery;
-
+using System.Drawing;
 
 namespace TobiiTesting1
 {
@@ -36,7 +33,7 @@ namespace TobiiTesting1
         private Bitmap videoimg;
 
         private VideoFileWriter FileWriter = new VideoFileWriter();
-
+        private SaveFileDialog saveAvi;
         public bool m_startrecording;
         public int m_index;//index in the listview
         private int w, h;
@@ -52,7 +49,6 @@ namespace TobiiTesting1
             m_startrecording = true;
         }
 
-        
         public void StopRecording()
         {
             m_startrecording = false;
@@ -71,13 +67,14 @@ namespace TobiiTesting1
         private void FormCameras_Load(object sender, EventArgs e)
         {
             CloseVideoSource();
-            
+
             videoSource = new VideoCaptureDevice(m_deviceMoniker);
 
             videoSource.VideoResolution = selectResolution(videoSource);//new line
 
             videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
 
+            videoSource.DesiredFrameSize = new Size(1920, 1080);
             //videoSource.DesiredFrameSize = new Size(1920, 120);//new Size(160, 120);
             //videoSource.DesiredFrameRate = 10;
             videoSource.Start();
@@ -87,10 +84,6 @@ namespace TobiiTesting1
 
         private static VideoCapabilities selectResolution(VideoCaptureDevice device)
         {
-            if (device.SourceObject is null)
-            {
-                return device.VideoResolution;
-            }
             foreach (var cap in device.VideoCapabilities)
             {
                 if (cap.FrameSize.Height == 1080)
@@ -124,6 +117,10 @@ namespace TobiiTesting1
             {
                 Console.WriteLine("object is used somewhere else");
             }
+                      
+
+            
+            
 
         }
 
@@ -136,7 +133,6 @@ namespace TobiiTesting1
                     videoSource.SignalToStop();
                     videoSource = null;
                 }
-            
             //close all files and save if not saved.
             FileWriter.Close();
         }

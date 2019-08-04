@@ -49,7 +49,7 @@
             this.ClientSize = new System.Drawing.Size(1898, 1024);
             this.Controls.Add(this.pictureBox1);
             this.Name = "FormCameras";
-            this.Text = "FormCameras";
+            this.Text = " ";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCameras_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormCameras_FormClosed);
             this.Load += new System.EventHandler(this.FormCameras_Load);
