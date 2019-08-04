@@ -19,9 +19,9 @@ The usb hub can only load one camera.
 
 Screen shot:
 ![mainwindow](screen/mainwindow.png)
-![thermal source](screen/thermal source.png)
-![find source](screen/find source.png)
-![got the source](screen/got the source.png)
+![thermal_source](screen/thermal_source.png)
+![find_source](screen/find_source.png)
+![after_source](screen/after_source.png)
 
 Tobii SDK
 refer to : http://developer.tobiipro.com/NET/dotnet-sdk-reference-guide.html
