@@ -624,7 +624,7 @@ namespace TobiiTesting1
                 {
                     //if normal then show normal,
                     //else show FlirFileFormat
-                    if (item.SubItems[1].Text.Contains("FLIR"))
+                    if (item.SubItems[1].Text.Contains("FLIR") && checkBox_thermalapi.Checked)//&& checkBox_thermalapi.Checked
                     {
                         MainWindow t_cameraForm = new MainWindow();
                         t_cameraForm.m_index = item.Index;
@@ -654,8 +654,7 @@ namespace TobiiTesting1
             if (t_count>0)
             {
                 timer1.Enabled = true;
-                //_cascadeClassifier = new CascadeClassifier(@".\\haarcascades\\" + "haarcascade_frontalface_alt2.xml");
-                _cascadeClassifier = new CascadeClassifier(@"..\data\haarcascades\haarcascade_frontalface_alt2.xml");
+                //_cascadeClassifier = new CascadeClassifier(@"..\data\haarcascades\haarcascade_frontalface_alt2.xml");
             }
 
 

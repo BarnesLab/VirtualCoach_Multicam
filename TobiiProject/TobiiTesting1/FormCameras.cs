@@ -36,15 +36,16 @@ namespace TobiiTesting1
         private SaveFileDialog saveAvi;
         public bool m_startrecording;
         public int m_index;//index in the listview
-        private int w, h;
+        private int w= 1920, h= 1080;
+        private static bool m_changed = true;
 
         public void StartRecording(string videofilepath)
         {
-            h = videoimg.Height;
-            w = videoimg.Width;
+            h = videoimg.Height;//videoSource.VideoResolution.FrameSize.Height;// 
+            w = videoimg.Width; //videoSource.VideoResolution.FrameSize.Width;// 
 
             FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Default, 5000000);
-            FileWriter.WriteVideoFrame(videoimg);
+            //FileWriter.WriteVideoFrame(videoimg);
 
             m_startrecording = true;
         }
@@ -69,12 +70,16 @@ namespace TobiiTesting1
             CloseVideoSource();
 
             videoSource = new VideoCaptureDevice(m_deviceMoniker);
-
-            videoSource.VideoResolution = selectResolution(videoSource);//new line
+            VideoCapabilities t_c = selectResolution(videoSource);//new line
+            if (m_changed)
+            {
+                videoSource.VideoResolution = t_c;
+            }
+            //videoSource.VideoResolution = selectResolution(videoSource);//new line
 
             videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
 
-            videoSource.DesiredFrameSize = new Size(1920, 1080);
+            //videoSource.DesiredFrameSize = new Size(1920, 1080);
             //videoSource.DesiredFrameSize = new Size(1920, 120);//new Size(160, 120);
             //videoSource.DesiredFrameRate = 10;
             videoSource.Start();
@@ -91,7 +96,9 @@ namespace TobiiTesting1
                 if (cap.FrameSize.Width == 1920)
                     return cap;
             }
+            m_changed = false;
             return device.VideoCapabilities.Last();
+            //return device.VideoCapabilities.Last();
         }
 
         public void SetDeviceMonikerString(string deviceMoniker)
@@ -99,29 +106,54 @@ namespace TobiiTesting1
             m_deviceMoniker = deviceMoniker;
         }
 
+        private void video_NewFrame_fail(object sender, NewFrameEventArgs eventArgs)
+        {
+            using (Bitmap videoimg = (Bitmap)eventArgs.Frame.Clone())
+            {
+                try
+                {
+                    //pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
+                    // save image to file
+                    if (m_startrecording && FileWriter.IsOpen && videoimg != null)
+                    {
+                        FileWriter.WriteVideoFrame(videoimg);
+                        FileWriter.Flush();
+                    }
+                    pictureBox1.Image = videoimg;// (Bitmap)eventArgs.Frame.Clone();
+                }
+                catch
+                {
+                    Console.WriteLine("object is used somewhere else");
+                }
+            }
+            
+            
+            //do processing here
+            
+            //videoimg.Dispose();
+        }
+
         private void video_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             videoimg = (Bitmap)eventArgs.Frame.Clone();
+
             //do processing here
             try
             {
-                pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
+                //pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
                 // save image to file
-                if (m_startrecording && FileWriter.IsOpen)
+                if (m_startrecording && FileWriter.IsOpen && videoimg != null)
                 {
                     FileWriter.WriteVideoFrame(videoimg);
                     FileWriter.Flush();
                 }
+                pictureBox1.Image = videoimg;// (Bitmap)eventArgs.Frame.Clone();
             }
             catch
             {
                 Console.WriteLine("object is used somewhere else");
             }
-                      
-
-            
-            
-
+            //videoimg.Dispose();
         }
 
         //close the device safely

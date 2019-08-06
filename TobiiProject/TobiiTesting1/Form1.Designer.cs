@@ -73,6 +73,7 @@ namespace TobiiTesting1
             this.label1_score_2 = new System.Windows.Forms.Label();
             this.label1_score_3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.checkBox_thermalapi = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -183,10 +184,10 @@ namespace TobiiTesting1
             this.Record,
             this.Camera,
             this.Index});
-            this.listView_CameraControl.Location = new System.Drawing.Point(46, 97);
+            this.listView_CameraControl.Location = new System.Drawing.Point(46, 67);
             this.listView_CameraControl.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.listView_CameraControl.Name = "listView_CameraControl";
-            this.listView_CameraControl.Size = new System.Drawing.Size(512, 147);
+            this.listView_CameraControl.Size = new System.Drawing.Size(512, 200);
             this.listView_CameraControl.TabIndex = 15;
             this.listView_CameraControl.UseCompatibleStateImageBehavior = false;
             this.listView_CameraControl.View = System.Windows.Forms.View.Details;
@@ -210,7 +211,7 @@ namespace TobiiTesting1
             this.show.Location = new System.Drawing.Point(567, 97);
             this.show.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.show.Name = "show";
-            this.show.Size = new System.Drawing.Size(112, 97);
+            this.show.Size = new System.Drawing.Size(112, 98);
             this.show.TabIndex = 0;
             this.show.Text = "Apply";
             this.show.UseVisualStyleBackColor = true;
@@ -257,12 +258,13 @@ namespace TobiiTesting1
             // checkBox_face
             // 
             this.checkBox_face.AutoSize = true;
-            this.checkBox_face.Location = new System.Drawing.Point(1280, 665);
+            this.checkBox_face.Location = new System.Drawing.Point(1308, 935);
             this.checkBox_face.Name = "checkBox_face";
             this.checkBox_face.Size = new System.Drawing.Size(160, 24);
             this.checkBox_face.TabIndex = 20;
             this.checkBox_face.Text = "Face Recognition";
             this.checkBox_face.UseVisualStyleBackColor = true;
+            this.checkBox_face.Visible = false;
             this.checkBox_face.CheckedChanged += new System.EventHandler(this.checkBox_face_CheckedChanged);
             // 
             // label3
@@ -276,6 +278,7 @@ namespace TobiiTesting1
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBox_thermalapi);
             this.groupBox1.Controls.Add(this.checkBox_empatica_1);
             this.groupBox1.Controls.Add(this.checkBox_empatica_0);
             this.groupBox1.Controls.Add(this.bt_empatica);
@@ -513,6 +516,19 @@ namespace TobiiTesting1
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // checkBox_thermalapi
+            // 
+            this.checkBox_thermalapi.AutoSize = true;
+            this.checkBox_thermalapi.Checked = true;
+            this.checkBox_thermalapi.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_thermalapi.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
+            this.checkBox_thermalapi.Location = new System.Drawing.Point(535, 46);
+            this.checkBox_thermalapi.Name = "checkBox_thermalapi";
+            this.checkBox_thermalapi.Size = new System.Drawing.Size(125, 21);
+            this.checkBox_thermalapi.TabIndex = 23;
+            this.checkBox_thermalapi.Text = "Use Thermal API";
+            this.checkBox_thermalapi.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -609,6 +625,7 @@ namespace TobiiTesting1
         private System.Windows.Forms.CheckBox checkBox_empatica_1;
         private System.Windows.Forms.CheckBox checkBox_empatica_0;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox checkBox_thermalapi;
     }
 }
 
