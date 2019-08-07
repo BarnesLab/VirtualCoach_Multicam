@@ -144,11 +144,11 @@ D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii_0804\TobiiProject\TobiiTest
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii_0804\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.csproj.CopyComplete
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii_0804\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.exe
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii_0804\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.pdb
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.csprojAssemblyReference.cache
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.DiscoveryDialog.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.MainWindow.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Release\Flir.Atlas.Image.dll
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Release\Flir.Atlas.Live.dll
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Release\TobiiTesting1.csprojAssemblyReference.cache
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Release\Flir.Cronos.Common.dll
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Release\Flir.Cronos.Filter.dll
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Release\Flir.Cronos.Filter.Adapter.dll

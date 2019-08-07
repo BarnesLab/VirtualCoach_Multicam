@@ -33,7 +33,7 @@ namespace TobiiTesting1
         private bool IsSrc1Dirty { get; set; }
         private VideoFileWriter FileWriter = new VideoFileWriter();
 
-        private Bitmap videoimg;
+        
 
         long StartTick = DateTime.Now.Ticks;
 
@@ -68,69 +68,7 @@ namespace TobiiTesting1
         {
             IsSrc1Dirty = true;
         }
-        /*
-        void _updateGuiTimer_Tick(object sender, EventArgs e)
-        {
-            m_second += timer1.Interval;
-            if (IsSrc1Dirty && _cam1 != null)
-            {
-                // a refresh is needed of source 1
-                try
-                {
-                    // always lock image data to prevent accessing of the image from other threads.
-                    _cam1.GetImage().EnterLock();
-                    pictureBoxSource1.Image = _cam1.GetImage().Image;                                      
-
-                    // save image to file
-                    if (m_startrecording && FileWriter.IsOpen)
-                    {
-                        videoimg = (Bitmap)_cam1.GetImage().Image;
-                        FileWriter.WriteVideoFrame(videoimg, TimeSpan.FromMilliseconds(m_second));
-                        FileWriter.Flush();
-
-                        
-                        //ThermalImage th = new ThermalImage();
-                        //byte[] arr = _cam1.GetImage().GetData();
-                        //th.Load(arr);
-                        
-
-                        double pixel_temp = 0;
-                        var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
-                        string line = UnixTimestamp + ",";
-
-                        double[,] pixel_array = _cam1.GetImage().ImageProcessing.GetPixelsArray(); //array containing the raw signal data
-                        for (int y = 0; y < th.Height; y++)
-                        {
-                            for (int x = 0; x < th.Width; x++)
-                            {
-                                int pixel_int = (int)pixel_array[y, x]; //casting the signal value to int
-                                pixel_temp = th.GetValueFromSignal(pixel_int); //converting signal to temperature
-                                line += pixel_temp.ToString("0.00") + ","; //"building" each line
-                            }                            
-                        }
-                        line += "\r\n";
-                        System.IO.File.AppendAllText(m_csvfilename, line);
-                        
-
-                    }
-
-
-                }
-                catch (Exception)
-                {
-
-
-                }
-                finally
-                {
-                    // We are done with the image data object, release.
-                    _cam1.GetImage().ExitLock();
-                    IsSrc1Dirty = false;
-                }
-            }
-            
-        }
-        */
+        
         public void CloseVideoSource()
         {
             if (_cam1 != null)
@@ -323,12 +261,11 @@ namespace TobiiTesting1
                         long currentTick = DateTime.Now.Ticks;
                         var frameOffset = new TimeSpan(currentTick - StartTick);
 
-                        //videoimg = (Bitmap)_cam1.GetImage().Image;
-                        videoimg = (Bitmap)pictureBoxSource1.Image.Clone();
+                        Bitmap videoimg = (Bitmap)pictureBoxSource1.Image.Clone();
+
                         FileWriter.WriteVideoFrame(videoimg, frameOffset);
-                        //Console.Write("timespan"+m_second);
-                        //FileWriter.WriteVideoFrame(videoimg);
                         FileWriter.Flush();
+                        videoimg.Dispose();
 
                         if (checkBox_csv.Checked)
                         {

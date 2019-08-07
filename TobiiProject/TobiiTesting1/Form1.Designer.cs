@@ -32,7 +32,7 @@ namespace TobiiTesting1
             this.button2 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timer_main = new System.Windows.Forms.Timer(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.rfsh = new System.Windows.Forms.Button();
             this.save = new System.Windows.Forms.Button();
@@ -51,11 +51,11 @@ namespace TobiiTesting1
             this.checkBox_face = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox_thermalapi = new System.Windows.Forms.CheckBox();
             this.checkBox_empatica_1 = new System.Windows.Forms.CheckBox();
             this.checkBox_empatica_0 = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label_time = new System.Windows.Forms.Label();
-            this.timer_label = new System.Windows.Forms.Timer(this.components);
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.textBox_participant = new System.Windows.Forms.TextBox();
@@ -73,7 +73,6 @@ namespace TobiiTesting1
             this.label1_score_2 = new System.Windows.Forms.Label();
             this.label1_score_3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.checkBox_thermalapi = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -110,9 +109,9 @@ namespace TobiiTesting1
             this.label2.Size = new System.Drawing.Size(0, 20);
             this.label2.TabIndex = 7;
             // 
-            // timer1
+            // timer_main
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer_main.Tick += new System.EventHandler(this.timer_main_Tick);
             // 
             // pictureBox1
             // 
@@ -292,6 +291,19 @@ namespace TobiiTesting1
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Device";
             // 
+            // checkBox_thermalapi
+            // 
+            this.checkBox_thermalapi.AutoSize = true;
+            this.checkBox_thermalapi.Checked = true;
+            this.checkBox_thermalapi.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_thermalapi.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
+            this.checkBox_thermalapi.Location = new System.Drawing.Point(535, 46);
+            this.checkBox_thermalapi.Name = "checkBox_thermalapi";
+            this.checkBox_thermalapi.Size = new System.Drawing.Size(125, 21);
+            this.checkBox_thermalapi.TabIndex = 23;
+            this.checkBox_thermalapi.Text = "Use Thermal API";
+            this.checkBox_thermalapi.UseVisualStyleBackColor = true;
+            // 
             // checkBox_empatica_1
             // 
             this.checkBox_empatica_1.AutoSize = true;
@@ -337,12 +349,6 @@ namespace TobiiTesting1
             this.label_time.Size = new System.Drawing.Size(62, 25);
             this.label_time.TabIndex = 23;
             this.label_time.Text = "00:00";
-            this.label_time.Click += new System.EventHandler(this.label_time_Click);
-            // 
-            // timer_label
-            // 
-            this.timer_label.Interval = 1000;
-            this.timer_label.Tick += new System.EventHandler(this.timer_label_Tick);
             // 
             // label4
             // 
@@ -516,19 +522,6 @@ namespace TobiiTesting1
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // checkBox_thermalapi
-            // 
-            this.checkBox_thermalapi.AutoSize = true;
-            this.checkBox_thermalapi.Checked = true;
-            this.checkBox_thermalapi.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_thermalapi.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
-            this.checkBox_thermalapi.Location = new System.Drawing.Point(535, 46);
-            this.checkBox_thermalapi.Name = "checkBox_thermalapi";
-            this.checkBox_thermalapi.Size = new System.Drawing.Size(125, 21);
-            this.checkBox_thermalapi.TabIndex = 23;
-            this.checkBox_thermalapi.Text = "Use Thermal API";
-            this.checkBox_thermalapi.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -584,7 +577,7 @@ namespace TobiiTesting1
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timer_main;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button rfsh;
         private System.Windows.Forms.Button save;
@@ -604,7 +597,6 @@ namespace TobiiTesting1
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label_time;
-        private System.Windows.Forms.Timer timer_label;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBox_participant;

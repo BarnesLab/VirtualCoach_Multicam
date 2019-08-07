@@ -8,13 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-
 using Accord.Video;
 using Accord.Video.DirectShow;
 using Accord.Video.FFMPEG;
@@ -34,18 +27,18 @@ using Flir.Atlas.Image;
 using Flir.Atlas.Live.Device;
 using Flir.Atlas.Live.Discovery;
 
+using System.Timers;
 // This is the code for your desktop app.
 // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
 
 namespace TobiiTesting1
 {
-
+    
     public partial class Form1 : Form
     {
         private bool DeviceExist = false;
         private FilterInfoCollection videoDevices;
-        private VideoCaptureDevice videoSource = null;
-
+        private VideoCaptureDevice videoSource = null;        
 
         //private FilterInfoCollection VideoCaptureDevices;
         //private VideoCaptureDevice FinalVideo = null;
@@ -99,6 +92,9 @@ namespace TobiiTesting1
 
         private static AsynchronousClientD m_empatica_0 = new AsynchronousClientD();
         private static AsynchronousClientD m_empatica_1 = new AsynchronousClientD();
+
+        private static System.Timers.Timer aTimer;
+        private static bool m_starttimer;
 
         public Form1()
         {
@@ -201,14 +197,20 @@ namespace TobiiTesting1
         }
 
         //get total received frame at 1 second tick
-        private void timer1_Tick(object sender, EventArgs e)
+        private void timer_main_Tick(object sender, EventArgs e)
         {
-            if (m_cameras.Count < 1)
+            //Console.Write(DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString());
+           /* if (m_cameras.Count < 1)
             {
                 return;
-            }
+            }*/
 
-            pictureBox1.Image = m_cameras[comboBox_showcameras.SelectedIndex].GetPicture();
+            if (comboBox_showcameras.SelectedIndex > -1)
+            {
+                //pictureBox1.Image = GCameraframe.g_cf;
+                //pictureBox1.Image = m_cameras[comboBox_showcameras.SelectedIndex].GetPicture();
+            }
+            
 
             if (false)//testing the calibration
             {
@@ -262,6 +264,7 @@ namespace TobiiTesting1
         //prevent sudden close while device is running
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+            aTimer.Enabled = false;
             CloseVideoSource();
             //FileWriter.Close();
             foreach (FormCameras item in m_cameras)
@@ -272,6 +275,7 @@ namespace TobiiTesting1
             {
                 item.CloseVideoSource();
             }
+
         }
 
         private void rfsh_Click_1(object sender, EventArgs e)
@@ -479,7 +483,6 @@ namespace TobiiTesting1
                         item.StopRecording();
                     }
 
-                    timer1.Enabled = false;
                     //CloseVideoSource();
                     label2.Text = "Device stopped.";
                     save.Text = "Record";
@@ -550,6 +553,8 @@ namespace TobiiTesting1
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            aTimer.Stop();
+            aTimer.Dispose();
             if (videoSource == null)
             { return; }
             if (videoSource.IsRunning)
@@ -558,6 +563,9 @@ namespace TobiiTesting1
                 //FileWriter.Close();
 
             }
+
+            
+
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -596,7 +604,33 @@ namespace TobiiTesting1
         {
             getCamList();
             addTaskList();
-            timer1.Enabled = false;
+            SetTimer();
+        }
+
+        private void SetTimer()
+        {
+            // Create a timer with a two second interval.
+            aTimer = new System.Timers.Timer(100);
+            // Hook up the Elapsed event for the timer. 
+            aTimer.Elapsed += OnTimedEvent;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
+
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            //Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",e.SignalTime);
+            if (m_starttimer && aTimer.Enabled)
+            {
+                this.Invoke((MethodInvoker)delegate () { pictureBox1.Image = m_cameras[comboBox_showcameras.SelectedIndex].GetPicture(); });
+
+                //pictureBox1.Image = m_cameras[comboBox_showcameras.SelectedIndex].GetPicture();
+            }
+
+            //trialperiod++;
+
+            //label_time.Text = String.Format("{0:D2}:{1:D2}", trialperiod / 60, trialperiod % 60);
+
         }
 
         private void addTaskList()
@@ -641,7 +675,7 @@ namespace TobiiTesting1
                         t_cameraForm.Show();
                         m_cameras.Add(t_cameraForm);
                         comboBox_showcameras.Items.Add(item.SubItems[1].Text + "_" + item.Index);
-                        comboBox_showcameras.SelectedIndex = 0;
+                        //comboBox_showcameras.SelectedIndex = 0;
                     }                    
 
                     //add cameras into the comboBox_showcameras
@@ -653,7 +687,7 @@ namespace TobiiTesting1
 
             if (t_count>0)
             {
-                timer1.Enabled = true;
+                //timer1.Enabled = true;
                 //_cascadeClassifier = new CascadeClassifier(@"..\data\haarcascades\haarcascade_frontalface_alt2.xml");
             }
 
@@ -721,11 +755,9 @@ namespace TobiiTesting1
 
         private void comboBox_showcameras_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-            pictureBox1.Image = m_cameras[comboBox_showcameras.SelectedIndex].GetPicture();
-            //get position data
-            //show on the image
-
+            //pictureBox1.Image = m_cameras[comboBox_showcameras.SelectedIndex].GetPicture();
+            m_starttimer = true;
+            //pictureBox1.Image = m_cameras[comboBox_showcameras.SelectedIndex].videoimg;
         }
 
         private void timer_empatica_Tick(object sender, EventArgs e)
@@ -753,17 +785,7 @@ namespace TobiiTesting1
 
         }
 
-        private void timer_label_Tick(object sender, EventArgs e)
-        {
-            trialperiod++;
 
-            label_time.Text = String.Format("{0:D2}:{1:D2}", trialperiod/60, trialperiod%60);
-        }
-
-        private void label_time_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void bt_enter_Click(object sender, EventArgs e)
         {
@@ -823,7 +845,6 @@ namespace TobiiTesting1
 
 
                 bt_trial.Text = "End the Trial " + trialIndex.Text;
-                timer_label.Enabled = true;
                 bt_enter.Enabled = false;
                 trialIndex.Enabled = false;
                 comboBox1.Enabled = false;
@@ -839,7 +860,6 @@ namespace TobiiTesting1
                 
 
                 bt_trial.Text = "Start A New Trial";
-                timer_label.Enabled = false;
                 trialperiod = 0;
                 
                 bt_enter.Enabled = true;

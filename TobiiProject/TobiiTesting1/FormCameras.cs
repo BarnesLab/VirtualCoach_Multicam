@@ -30,7 +30,7 @@ namespace TobiiTesting1
     {
         private string m_deviceMoniker;
         private VideoCaptureDevice videoSource = null;
-        private Bitmap videoimg;
+        public Bitmap videoimg;
 
         private VideoFileWriter FileWriter = new VideoFileWriter();
         private SaveFileDialog saveAvi;
@@ -39,11 +39,17 @@ namespace TobiiTesting1
         private int w= 1920, h= 1080;
         private static bool m_changed = true;
 
+        public bool m_duplicate=false;// duplicate display on the main window
+
+        public List<Bitmap> m_framelist = new List<Bitmap>(50);
+
         public void StartRecording(string videofilepath)
         {
-            h = videoimg.Height;//videoSource.VideoResolution.FrameSize.Height;// 
-            w = videoimg.Width; //videoSource.VideoResolution.FrameSize.Width;// 
-
+            if (!m_changed)
+            {
+                h = videoimg.Height;//videoSource.VideoResolution.FrameSize.Height;// 
+                w = videoimg.Width; //videoSource.VideoResolution.FrameSize.Width;// 
+            }
             FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Default, 5000000);
             //FileWriter.WriteVideoFrame(videoimg);
 
@@ -60,11 +66,21 @@ namespace TobiiTesting1
         {
             InitializeComponent();
         }
-        public Image GetPicture()
-        { 
+        /*
+        public Image GetPicture
+        {
+            get { return pictureBox1.Image; }
             //return videoimg;
+            //return pictureBox1.Image;
+        }
+        */
+
+        public Image GetPicture()
+        {
             return pictureBox1.Image;
         }
+
+
         private void FormCameras_Load(object sender, EventArgs e)
         {
             CloseVideoSource();
@@ -74,7 +90,10 @@ namespace TobiiTesting1
             if (m_changed)
             {
                 videoSource.VideoResolution = t_c;
+                h = videoSource.VideoResolution.FrameSize.Height;
+                w = videoSource.VideoResolution.FrameSize.Width;
             }
+            
             //videoSource.VideoResolution = selectResolution(videoSource);//new line
 
             videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
@@ -106,34 +125,89 @@ namespace TobiiTesting1
             m_deviceMoniker = deviceMoniker;
         }
 
-        private void video_NewFrame_fail(object sender, NewFrameEventArgs eventArgs)
+        public void DuplicateDisplay(bool t_status = true)
         {
-            using (Bitmap videoimg = (Bitmap)eventArgs.Frame.Clone())
+            m_duplicate = t_status;
+        }
+
+        private void video_NewFrame_2nd(object sender, NewFrameEventArgs eventArgs)
+        {
+            if (m_duplicate)
             {
-                try
+                videoimg = (Bitmap)eventArgs.Frame.Clone();
+
+                m_framelist.Add(videoimg);
+                if (m_framelist.Count > 100)
                 {
-                    //pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
-                    // save image to file
-                    if (m_startrecording && FileWriter.IsOpen && videoimg != null)
-                    {
-                        FileWriter.WriteVideoFrame(videoimg);
-                        FileWriter.Flush();
-                    }
-                    pictureBox1.Image = videoimg;// (Bitmap)eventArgs.Frame.Clone();
+                    m_framelist[0].Dispose();
+                    m_framelist.RemoveAt(0);
                 }
-                catch
+                
+            }
+            else
+            {
+                Bitmap t_frame = videoimg;
+
+                videoimg = (Bitmap)eventArgs.Frame.Clone();
+
+                if (t_frame != null)
                 {
-                    Console.WriteLine("object is used somewhere else");
+                    t_frame.Dispose();
                 }
             }
             
             
-            //do processing here
+            //pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
+
+            try
+            {
+                //pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();                    
+                // save image to file
+                if (m_startrecording && FileWriter.IsOpen && videoimg != null)
+                {
+                    FileWriter.WriteVideoFrame(videoimg);
+                    FileWriter.Flush();
+                }
+                pictureBox1.Image = videoimg;
+            }
+            catch
+            {
+                Console.WriteLine("object is used somewhere else");
+            }
             
-            //videoimg.Dispose();
+
         }
 
         private void video_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        {
+            videoimg = (Bitmap)eventArgs.Frame.Clone();
+            m_framelist.Add(videoimg);
+
+            try
+            {
+                if (m_startrecording && FileWriter.IsOpen && videoimg != null)
+                {
+                    FileWriter.WriteVideoFrame(videoimg);
+                    FileWriter.Flush();
+                }
+                pictureBox1.Image = videoimg;
+                                
+            }
+            catch
+            {
+                Console.WriteLine("object is used somewhere else");
+            }
+
+            
+            if (m_framelist.Count > 50)//100
+            {
+                m_framelist[0].Dispose();
+                m_framelist.RemoveAt(0);
+            }
+        }
+
+
+        private void video_NewFrame_fun(object sender, NewFrameEventArgs eventArgs)
         {
             videoimg = (Bitmap)eventArgs.Frame.Clone();
 
@@ -153,7 +227,6 @@ namespace TobiiTesting1
             {
                 Console.WriteLine("object is used somewhere else");
             }
-            //videoimg.Dispose();
         }
 
         //close the device safely
