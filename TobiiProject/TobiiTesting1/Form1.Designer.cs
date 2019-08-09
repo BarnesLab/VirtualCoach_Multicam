@@ -92,12 +92,13 @@ namespace TobiiTesting1
             // 
             // comboBox1
             // 
+            this.comboBox1.Enabled = false;
             this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(179, 549);
+            this.comboBox1.Location = new System.Drawing.Point(166, 446);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(379, 33);
+            this.comboBox1.Size = new System.Drawing.Size(376, 33);
             this.comboBox1.TabIndex = 5;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
@@ -119,7 +120,7 @@ namespace TobiiTesting1
             this.pictureBox1.Location = new System.Drawing.Point(740, 42);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(723, 589);
+            this.pictureBox1.Size = new System.Drawing.Size(1018, 589);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 8;
             this.pictureBox1.TabStop = false;
@@ -138,10 +139,10 @@ namespace TobiiTesting1
             // save
             // 
             this.save.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
-            this.save.Location = new System.Drawing.Point(80, 402);
+            this.save.Location = new System.Drawing.Point(803, 764);
             this.save.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.save.Name = "save";
-            this.save.Size = new System.Drawing.Size(600, 71);
+            this.save.Size = new System.Drawing.Size(418, 115);
             this.save.TabIndex = 10;
             this.save.Text = "Start Session";
             this.save.UseVisualStyleBackColor = true;
@@ -149,7 +150,8 @@ namespace TobiiTesting1
             // 
             // bt_trial
             // 
-            this.bt_trial.Location = new System.Drawing.Point(567, 549);
+            this.bt_trial.Enabled = false;
+            this.bt_trial.Location = new System.Drawing.Point(567, 440);
             this.bt_trial.Name = "bt_trial";
             this.bt_trial.Size = new System.Drawing.Size(147, 82);
             this.bt_trial.TabIndex = 11;
@@ -159,10 +161,11 @@ namespace TobiiTesting1
             // 
             // trialIndex
             // 
+            this.trialIndex.Enabled = false;
             this.trialIndex.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.trialIndex.Location = new System.Drawing.Point(179, 595);
+            this.trialIndex.Location = new System.Drawing.Point(166, 492);
             this.trialIndex.Name = "trialIndex";
-            this.trialIndex.Size = new System.Drawing.Size(379, 30);
+            this.trialIndex.Size = new System.Drawing.Size(376, 30);
             this.trialIndex.TabIndex = 12;
             this.trialIndex.Text = "1";
             this.trialIndex.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -171,7 +174,7 @@ namespace TobiiTesting1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(52, 595);
+            this.label1.Location = new System.Drawing.Point(36, 492);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(127, 25);
             this.label1.TabIndex = 13;
@@ -191,6 +194,7 @@ namespace TobiiTesting1
             this.listView_CameraControl.TabIndex = 15;
             this.listView_CameraControl.UseCompatibleStateImageBehavior = false;
             this.listView_CameraControl.View = System.Windows.Forms.View.Details;
+            this.listView_CameraControl.SelectedIndexChanged += new System.EventHandler(this.listView_CameraControl_SelectedIndexChanged);
             // 
             // Record
             // 
@@ -222,7 +226,7 @@ namespace TobiiTesting1
             this.comboBox_showcameras.FormattingEnabled = true;
             this.comboBox_showcameras.Location = new System.Drawing.Point(848, 663);
             this.comboBox_showcameras.Name = "comboBox_showcameras";
-            this.comboBox_showcameras.Size = new System.Drawing.Size(602, 28);
+            this.comboBox_showcameras.Size = new System.Drawing.Size(910, 28);
             this.comboBox_showcameras.TabIndex = 17;
             this.comboBox_showcameras.SelectedIndexChanged += new System.EventHandler(this.comboBox_showcameras_SelectedIndexChanged);
             // 
@@ -246,7 +250,7 @@ namespace TobiiTesting1
             // textBox_empatica
             // 
             this.textBox_empatica.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
-            this.textBox_empatica.Location = new System.Drawing.Point(1235, 938);
+            this.textBox_empatica.Location = new System.Drawing.Point(1525, 700);
             this.textBox_empatica.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox_empatica.Name = "textBox_empatica";
             this.textBox_empatica.Size = new System.Drawing.Size(56, 21);
@@ -258,7 +262,7 @@ namespace TobiiTesting1
             // checkBox_face
             // 
             this.checkBox_face.AutoSize = true;
-            this.checkBox_face.Location = new System.Drawing.Point(1308, 935);
+            this.checkBox_face.Location = new System.Drawing.Point(1598, 697);
             this.checkBox_face.Name = "checkBox_face";
             this.checkBox_face.Size = new System.Drawing.Size(160, 24);
             this.checkBox_face.TabIndex = 20;
@@ -345,7 +349,7 @@ namespace TobiiTesting1
             // 
             this.label_time.AutoSize = true;
             this.label_time.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_time.Location = new System.Drawing.Point(176, 848);
+            this.label_time.Location = new System.Drawing.Point(160, 745);
             this.label_time.Name = "label_time";
             this.label_time.Size = new System.Drawing.Size(62, 25);
             this.label_time.TabIndex = 23;
@@ -355,7 +359,7 @@ namespace TobiiTesting1
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(52, 508);
+            this.label4.Location = new System.Drawing.Point(36, 405);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(109, 25);
             this.label4.TabIndex = 24;
@@ -365,7 +369,7 @@ namespace TobiiTesting1
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(52, 666);
+            this.label5.Location = new System.Drawing.Point(43, 554);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(70, 25);
             this.label5.TabIndex = 25;
@@ -373,18 +377,20 @@ namespace TobiiTesting1
             // 
             // textBox_participant
             // 
+            this.textBox_participant.Enabled = false;
             this.textBox_participant.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox_participant.Location = new System.Drawing.Point(179, 508);
+            this.textBox_participant.Location = new System.Drawing.Point(166, 405);
             this.textBox_participant.Name = "textBox_participant";
-            this.textBox_participant.Size = new System.Drawing.Size(379, 30);
+            this.textBox_participant.Size = new System.Drawing.Size(376, 30);
             this.textBox_participant.TabIndex = 26;
             this.textBox_participant.Text = "Name";
             this.textBox_participant.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // textBox_score_0
             // 
+            this.textBox_score_0.Enabled = false;
             this.textBox_score_0.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBox_score_0.Location = new System.Drawing.Point(168, 675);
+            this.textBox_score_0.Location = new System.Drawing.Point(166, 554);
             this.textBox_score_0.Name = "textBox_score_0";
             this.textBox_score_0.Size = new System.Drawing.Size(82, 30);
             this.textBox_score_0.TabIndex = 27;
@@ -395,7 +401,7 @@ namespace TobiiTesting1
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label7.Location = new System.Drawing.Point(52, 848);
+            this.label7.Location = new System.Drawing.Point(36, 745);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(68, 25);
             this.label7.TabIndex = 29;
@@ -403,18 +409,19 @@ namespace TobiiTesting1
             // 
             // textBox_comment
             // 
-            this.textBox_comment.Location = new System.Drawing.Point(168, 889);
+            this.textBox_comment.Enabled = false;
+            this.textBox_comment.Location = new System.Drawing.Point(152, 786);
             this.textBox_comment.Multiline = true;
             this.textBox_comment.Name = "textBox_comment";
             this.textBox_comment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_comment.Size = new System.Drawing.Size(379, 93);
+            this.textBox_comment.Size = new System.Drawing.Size(406, 93);
             this.textBox_comment.TabIndex = 30;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label6.Location = new System.Drawing.Point(52, 888);
+            this.label6.Location = new System.Drawing.Point(36, 785);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(103, 25);
             this.label6.TabIndex = 31;
@@ -424,7 +431,7 @@ namespace TobiiTesting1
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(52, 552);
+            this.label8.Location = new System.Drawing.Point(36, 449);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(62, 25);
             this.label8.TabIndex = 32;
@@ -432,8 +439,9 @@ namespace TobiiTesting1
             // 
             // textBox_score_1
             // 
+            this.textBox_score_1.Enabled = false;
             this.textBox_score_1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBox_score_1.Location = new System.Drawing.Point(168, 718);
+            this.textBox_score_1.Location = new System.Drawing.Point(166, 597);
             this.textBox_score_1.Name = "textBox_score_1";
             this.textBox_score_1.Size = new System.Drawing.Size(82, 30);
             this.textBox_score_1.TabIndex = 33;
@@ -442,8 +450,9 @@ namespace TobiiTesting1
             // 
             // textBox_score_2
             // 
+            this.textBox_score_2.Enabled = false;
             this.textBox_score_2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBox_score_2.Location = new System.Drawing.Point(168, 762);
+            this.textBox_score_2.Location = new System.Drawing.Point(166, 641);
             this.textBox_score_2.Name = "textBox_score_2";
             this.textBox_score_2.Size = new System.Drawing.Size(82, 30);
             this.textBox_score_2.TabIndex = 34;
@@ -453,7 +462,7 @@ namespace TobiiTesting1
             // bt_enter
             // 
             this.bt_enter.Enabled = false;
-            this.bt_enter.Location = new System.Drawing.Point(554, 888);
+            this.bt_enter.Location = new System.Drawing.Point(567, 786);
             this.bt_enter.Name = "bt_enter";
             this.bt_enter.Size = new System.Drawing.Size(164, 94);
             this.bt_enter.TabIndex = 35;
@@ -463,8 +472,9 @@ namespace TobiiTesting1
             // 
             // textBox_score_3
             // 
+            this.textBox_score_3.Enabled = false;
             this.textBox_score_3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBox_score_3.Location = new System.Drawing.Point(168, 805);
+            this.textBox_score_3.Location = new System.Drawing.Point(166, 684);
             this.textBox_score_3.Name = "textBox_score_3";
             this.textBox_score_3.Size = new System.Drawing.Size(82, 30);
             this.textBox_score_3.TabIndex = 30;
@@ -475,7 +485,7 @@ namespace TobiiTesting1
             // 
             this.label1_score_0.AutoSize = true;
             this.label1_score_0.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label1_score_0.Location = new System.Drawing.Point(278, 675);
+            this.label1_score_0.Location = new System.Drawing.Point(276, 554);
             this.label1_score_0.Name = "label1_score_0";
             this.label1_score_0.Size = new System.Drawing.Size(139, 25);
             this.label1_score_0.TabIndex = 37;
@@ -485,7 +495,7 @@ namespace TobiiTesting1
             // 
             this.label1_score_1.AutoSize = true;
             this.label1_score_1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label1_score_1.Location = new System.Drawing.Point(278, 718);
+            this.label1_score_1.Location = new System.Drawing.Point(276, 597);
             this.label1_score_1.Name = "label1_score_1";
             this.label1_score_1.Size = new System.Drawing.Size(139, 25);
             this.label1_score_1.TabIndex = 38;
@@ -495,7 +505,7 @@ namespace TobiiTesting1
             // 
             this.label1_score_2.AutoSize = true;
             this.label1_score_2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label1_score_2.Location = new System.Drawing.Point(278, 762);
+            this.label1_score_2.Location = new System.Drawing.Point(276, 641);
             this.label1_score_2.Name = "label1_score_2";
             this.label1_score_2.Size = new System.Drawing.Size(139, 25);
             this.label1_score_2.TabIndex = 39;
@@ -505,7 +515,7 @@ namespace TobiiTesting1
             // 
             this.label1_score_3.AutoSize = true;
             this.label1_score_3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label1_score_3.Location = new System.Drawing.Point(278, 805);
+            this.label1_score_3.Location = new System.Drawing.Point(276, 684);
             this.label1_score_3.Name = "label1_score_3";
             this.label1_score_3.Size = new System.Drawing.Size(139, 25);
             this.label1_score_3.TabIndex = 40;
@@ -513,7 +523,7 @@ namespace TobiiTesting1
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1115, 931);
+            this.button1.Location = new System.Drawing.Point(1405, 693);
             this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(112, 35);
@@ -527,9 +537,9 @@ namespace TobiiTesting1
             // 
             this.button_endtask.Enabled = false;
             this.button_endtask.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
-            this.button_endtask.Location = new System.Drawing.Point(766, 738);
+            this.button_endtask.Location = new System.Drawing.Point(1315, 762);
             this.button_endtask.Name = "button_endtask";
-            this.button_endtask.Size = new System.Drawing.Size(684, 175);
+            this.button_endtask.Size = new System.Drawing.Size(443, 117);
             this.button_endtask.TabIndex = 42;
             this.button_endtask.Text = "End Session";
             this.button_endtask.UseVisualStyleBackColor = true;
@@ -539,7 +549,7 @@ namespace TobiiTesting1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1494, 1002);
+            this.ClientSize = new System.Drawing.Size(1802, 906);
             this.Controls.Add(this.button_endtask);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox_empatica);

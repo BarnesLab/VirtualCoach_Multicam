@@ -121,7 +121,15 @@ namespace TobiiTesting1
                     //comboBox1.Items.Add(device.Name);
 
                     ListViewItem item1 = new ListViewItem("", 0);
-                    item1.Checked = true;                    
+                    if (device.Name.Contains("eBUS"))
+                    {
+                        item1.Checked = false;
+                    }
+                    else
+                    {
+                        item1.Checked = true;
+                    }
+                                       
                     item1.SubItems.Add(device.Name);
                     item1.SubItems.Add(t_index.ToString());
                     listView_CameraControl.Items.Add(item1);
@@ -390,10 +398,22 @@ namespace TobiiTesting1
                     timer_empatica.Enabled = true;
                 }
                 startrecording = true;
-            }
-            save.Enabled = false;
+                save.Enabled = false;
 
-            button_endtask.Enabled = true;
+                button_endtask.Enabled = true;
+
+                textBox_participant.Enabled = true;
+                comboBox1.Enabled = true;
+                trialIndex.Enabled = true;
+                bt_trial.Enabled = true;
+                textBox_score_0.Enabled = true;
+                textBox_score_1.Enabled = true;
+                textBox_score_2.Enabled = true;
+                textBox_score_3.Enabled = true;
+                textBox_comment.Enabled = true;
+
+            }
+            
         }
 
         
@@ -735,6 +755,22 @@ namespace TobiiTesting1
             save.Enabled = true;
 
             button_endtask.Enabled = false;
+
+            textBox_participant.Enabled = false;
+            comboBox1.Enabled = false;
+            trialIndex.Enabled = false;
+            bt_trial.Enabled = false;
+            textBox_score_0.Enabled = false;
+            textBox_score_1.Enabled = false;
+            textBox_score_2.Enabled = false;
+            textBox_score_3.Enabled = false;
+            textBox_comment.Enabled = false;
+            bt_enter.Enabled = false;
+
+        }
+
+        private void listView_CameraControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
         }
 
