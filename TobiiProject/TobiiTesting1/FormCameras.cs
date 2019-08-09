@@ -36,7 +36,7 @@ namespace TobiiTesting1
         private SaveFileDialog saveAvi;
         public bool m_startrecording;
         public int m_index;//index in the listview
-        private int w= 1920, h= 1080;
+        private int w= 1280, h= 720;
         private static bool m_changed = true;
 
         public bool m_duplicate=false;// duplicate display on the main window
@@ -50,6 +50,7 @@ namespace TobiiTesting1
                 h = videoimg.Height;//videoSource.VideoResolution.FrameSize.Height;// 
                 w = videoimg.Width; //videoSource.VideoResolution.FrameSize.Width;// 
             }
+            FileWriter.Close();
             FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Default, 5000000);
             //FileWriter.WriteVideoFrame(videoimg);
 
@@ -58,9 +59,10 @@ namespace TobiiTesting1
 
         public void StopRecording()
         {
+            //FileWriter.Close();
             m_startrecording = false;
             //wait 0.1 s
-            FileWriter.Close();
+            
         }
         public FormCameras()
         {
@@ -110,9 +112,9 @@ namespace TobiiTesting1
         {
             foreach (var cap in device.VideoCapabilities)
             {
-                if (cap.FrameSize.Height == 1080)
+                if (cap.FrameSize.Height == 720 && cap.FrameSize.Width == 1280)
                     return cap;
-                if (cap.FrameSize.Width == 1920)
+                if (cap.FrameSize.Height == 1080 && cap.FrameSize.Width == 1960)
                     return cap;
             }
             m_changed = false;
@@ -203,6 +205,12 @@ namespace TobiiTesting1
             {
                 m_framelist[0].Dispose();
                 m_framelist.RemoveAt(0);
+            }
+
+            if(!m_startrecording && FileWriter.IsOpen)
+            {
+                Console.WriteLine("stop recording");
+                FileWriter.Close();
             }
         }
 

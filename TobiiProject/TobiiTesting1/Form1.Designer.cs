@@ -73,6 +73,7 @@ namespace TobiiTesting1
             this.label1_score_2 = new System.Windows.Forms.Label();
             this.label1_score_3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.button_endtask = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -93,7 +94,7 @@ namespace TobiiTesting1
             // 
             this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(168, 549);
+            this.comboBox1.Location = new System.Drawing.Point(179, 549);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(379, 33);
@@ -136,21 +137,21 @@ namespace TobiiTesting1
             // 
             // save
             // 
-            this.save.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.save.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
             this.save.Location = new System.Drawing.Point(80, 402);
             this.save.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.save.Name = "save";
             this.save.Size = new System.Drawing.Size(600, 71);
             this.save.TabIndex = 10;
-            this.save.Text = "Record";
+            this.save.Text = "Start Session";
             this.save.UseVisualStyleBackColor = true;
             this.save.Click += new System.EventHandler(this.save_Click);
             // 
             // bt_trial
             // 
-            this.bt_trial.Location = new System.Drawing.Point(554, 549);
+            this.bt_trial.Location = new System.Drawing.Point(567, 549);
             this.bt_trial.Name = "bt_trial";
-            this.bt_trial.Size = new System.Drawing.Size(160, 82);
+            this.bt_trial.Size = new System.Drawing.Size(147, 82);
             this.bt_trial.TabIndex = 11;
             this.bt_trial.Text = "Start A New Trial";
             this.bt_trial.UseVisualStyleBackColor = true;
@@ -159,7 +160,7 @@ namespace TobiiTesting1
             // trialIndex
             // 
             this.trialIndex.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.trialIndex.Location = new System.Drawing.Point(168, 595);
+            this.trialIndex.Location = new System.Drawing.Point(179, 595);
             this.trialIndex.Name = "trialIndex";
             this.trialIndex.Size = new System.Drawing.Size(379, 30);
             this.trialIndex.TabIndex = 12;
@@ -172,9 +173,9 @@ namespace TobiiTesting1
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(52, 595);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(104, 25);
+            this.label1.Size = new System.Drawing.Size(127, 25);
             this.label1.TabIndex = 13;
-            this.label1.Text = "Trial mark:";
+            this.label1.Text = "Trial number:";
             // 
             // listView_CameraControl
             // 
@@ -221,7 +222,7 @@ namespace TobiiTesting1
             this.comboBox_showcameras.FormattingEnabled = true;
             this.comboBox_showcameras.Location = new System.Drawing.Point(848, 663);
             this.comboBox_showcameras.Name = "comboBox_showcameras";
-            this.comboBox_showcameras.Size = new System.Drawing.Size(358, 28);
+            this.comboBox_showcameras.Size = new System.Drawing.Size(602, 28);
             this.comboBox_showcameras.TabIndex = 17;
             this.comboBox_showcameras.SelectedIndexChanged += new System.EventHandler(this.comboBox_showcameras_SelectedIndexChanged);
             // 
@@ -245,7 +246,7 @@ namespace TobiiTesting1
             // textBox_empatica
             // 
             this.textBox_empatica.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
-            this.textBox_empatica.Location = new System.Drawing.Point(1291, 857);
+            this.textBox_empatica.Location = new System.Drawing.Point(1235, 938);
             this.textBox_empatica.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox_empatica.Name = "textBox_empatica";
             this.textBox_empatica.Size = new System.Drawing.Size(56, 21);
@@ -373,7 +374,7 @@ namespace TobiiTesting1
             // textBox_participant
             // 
             this.textBox_participant.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox_participant.Location = new System.Drawing.Point(168, 508);
+            this.textBox_participant.Location = new System.Drawing.Point(179, 508);
             this.textBox_participant.Name = "textBox_participant";
             this.textBox_participant.Size = new System.Drawing.Size(379, 30);
             this.textBox_participant.TabIndex = 26;
@@ -512,7 +513,7 @@ namespace TobiiTesting1
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1364, 843);
+            this.button1.Location = new System.Drawing.Point(1115, 931);
             this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(112, 35);
@@ -522,11 +523,24 @@ namespace TobiiTesting1
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // button_endtask
+            // 
+            this.button_endtask.Enabled = false;
+            this.button_endtask.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.button_endtask.Location = new System.Drawing.Point(766, 738);
+            this.button_endtask.Name = "button_endtask";
+            this.button_endtask.Size = new System.Drawing.Size(684, 175);
+            this.button_endtask.TabIndex = 42;
+            this.button_endtask.Text = "End Session";
+            this.button_endtask.UseVisualStyleBackColor = true;
+            this.button_endtask.Click += new System.EventHandler(this.button_endtask_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1494, 1002);
+            this.Controls.Add(this.button_endtask);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox_empatica);
             this.Controls.Add(this.label1_score_3);
@@ -551,7 +565,6 @@ namespace TobiiTesting1
             this.Controls.Add(this.comboBox_showcameras);
             this.Controls.Add(this.show);
             this.Controls.Add(this.listView_CameraControl);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.trialIndex);
             this.Controls.Add(this.bt_trial);
             this.Controls.Add(this.save);
@@ -560,6 +573,7 @@ namespace TobiiTesting1
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.label1);
             this.Name = "Form1";
             this.Text = "Virtual Coach";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -618,6 +632,7 @@ namespace TobiiTesting1
         private System.Windows.Forms.CheckBox checkBox_empatica_0;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox checkBox_thermalapi;
+        private System.Windows.Forms.Button button_endtask;
     }
 }
 

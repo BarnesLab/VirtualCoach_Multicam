@@ -19,9 +19,6 @@ D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\x86\opencv_ffmpeg410.dll
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\x86\vcruntime140.dll
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Accord.dll.config
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\TobiiTesting1.exe.config
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\TobiiTesting1.exe
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\TobiiTesting1.pdb
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Accord.dll
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Accord.Video.DirectShow.dll
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Accord.Video.dll
@@ -62,12 +59,9 @@ D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.FormCamera.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.FormCameras.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.Form_Empatica.resources
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.Properties.Resources.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.csproj.GenerateResource.cache
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.csproj.CoreCompileInputs.cache
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.csproj.CopyComplete
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.exe
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.pdb
 D:\Tianzi\workspace\TobbiSDKTesting\Backupcode\TobiiProject\TobiiTesting1\bin\Debug\tobii_firmware_upgrade.dll
 D:\Tianzi\workspace\TobbiSDKTesting\Backupcode\TobiiProject\TobiiTesting1\bin\Debug\tobii_pro.dll
 D:\Tianzi\workspace\TobbiSDKTesting\Backupcode\TobiiProject\TobiiTesting1\bin\Debug\avcodec-57.dll
@@ -221,3 +215,9 @@ D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.DiscoveryDialog.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.MainWindow.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.Form1.resources
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\VirtualCoach.exe.config
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\VirtualCoach.exe
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\VirtualCoach.pdb
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\VirtualCoach.exe
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\VirtualCoach.pdb
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\VirtualCoach.Properties.Resources.resources
