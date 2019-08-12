@@ -16,12 +16,10 @@ using Tobii.Research;
 
 using System.IO;
 using System.Diagnostics;
-using System.Linq;
 
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using System.Drawing;
 
 using Flir.Atlas.Image;
 using Flir.Atlas.Live.Device;
@@ -36,7 +34,6 @@ namespace TobiiTesting1
     
     public partial class Form1 : Form
     {
-        private bool DeviceExist = false;
         private FilterInfoCollection videoDevices;
         private VideoCaptureDevice videoSource = null;        
 
@@ -47,14 +44,13 @@ namespace TobiiTesting1
         //private AVIWriter AVIwriter = new AVIWriter();
         //private VideoFileWriter FileWriter = new VideoFileWriter();
         private SaveFileDialog saveAvi;
-        public static bool startrecording;
+        public static bool startsession;
 
-        private int w, h;
-        private string m_folder;
         private string trialsavingpath = "";
-        private string avisavingpath = "";
 
         static string gazedatasavingpath = "";
+
+        private string m_savingfolder = "";
         //static bool b_recording = false;
 
         static float m_eyegazex, m_eyegazey;
@@ -72,7 +68,7 @@ namespace TobiiTesting1
         //Form_Empatica empaticaForm;
 
         public bool m_empaticarunning;
-        private CascadeClassifier _cascadeClassifier;
+        //private CascadeClassifier _cascadeClassifier;
 
         private DateTime m_trialstart = DateTime.Now;
 
@@ -99,7 +95,7 @@ namespace TobiiTesting1
         public Form1()
         {
             InitializeComponent();
-            startrecording = false;
+            startsession = false;
             m_empaticarunning = false;
         }
 
@@ -113,7 +109,6 @@ namespace TobiiTesting1
                 if (videoDevices.Count == 0)
                     throw new ApplicationException();
 
-                DeviceExist = true;
                 listView_CameraControl.Items.Clear();
                 int t_index = 0;
                 foreach (FilterInfo device in videoDevices)
@@ -138,7 +133,6 @@ namespace TobiiTesting1
             }
             catch (ApplicationException)
             {
-                DeviceExist = false;
                 //comboBox1.Items.Add("No capture device on your system");
             }
         }
@@ -159,50 +153,7 @@ namespace TobiiTesting1
                new Bgr(0, 255, 0).MCvScalar);
             return img;
         }
-        //eventhandler if new frame is ready
-        private void video_NewFrame(object sender, NewFrameEventArgs eventArgs)
-        {
-            videoimg = (Bitmap)eventArgs.Frame.Clone();
-            //do processing here
-            //pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
-
-            Image<Bgr, Byte> imageCV = new Image<Bgr, byte>(videoimg); //Image Class from Emgu.CV
-            //Mat mat = imageCV.Mat;
-
-            //update the eyegaze data
-
-            Rectangle eyegaze = new System.Drawing.Rectangle((int)m_eyegazex, (int)m_eyegazey, 20,20);//x,y,w,h
-            imageCV.Draw(eyegaze, new Bgr(0, 255, 0));
-            //cameraForm.pictureBox1.Image = imageCV.Bitmap;
-
-            //darw text to image
-            
-            Mat mat = DrawInfoToImage(imageCV.Mat,m_eyegazestr);
-            //cameraForm.pictureBox1.Image = mat.Bitmap;
-            pictureBox1.Image = mat.Bitmap;
-            //cameraForm.pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
-            // save image to file
-            if (startrecording)
-            {
-                //FileWriter.WriteVideoFrame(videoimg);
-                //FileWriter.Flush();
-            }
-            
-        }
-
-        //close the device safely
-        private void CloseVideoSource()
-        {
-            if (!(videoSource == null))
-                if (videoSource.IsRunning)
-                {
-                    videoSource.SignalToStop();
-                    videoSource = null;
-                }
-            //close all files and save if not saved.
-
-
-        }
+        
 
         //get total received frame at 1 second tick
         private void timer_main_Tick(object sender, EventArgs e)
@@ -216,8 +167,7 @@ namespace TobiiTesting1
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             aTimer.Enabled = false;
-            CloseVideoSource();
-            //FileWriter.Close();
+            
             foreach (FormCameras item in m_cameras)
             {
                 item.CloseVideoSource();
@@ -235,18 +185,6 @@ namespace TobiiTesting1
             //comboBox1.SelectedIndex = 0; //make dafault to first cam
         }
 
-        /*
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            // Click on the link below to continue learning how to build a desktop app using WinForms!
-            System.Diagnostics.Process.Start("http://aka.ms/dotnet-get-started-desktop");
-
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Thanks!");
-        }
-        */
         private void button2_Click(object sender, EventArgs e)
         {
             /*
@@ -255,7 +193,6 @@ namespace TobiiTesting1
             Running a calibration procedure in which the eye tracker is calibrated to the user.
             Setting up a subscription to gaze data, and collecting and saving the data on the computer running the application.In some cases, the data is also shown live by the application.
             */
-            //GenerateRecordingFile();
             
             var eyeTrackers = EyeTrackingOperations_FindAllEyeTrackers.Execute(this);
             while (eyeTrackers.Count < 1)
@@ -351,7 +288,7 @@ namespace TobiiTesting1
                  */
 
                 //System.IO.File.WriteAllText(filename, t_str);
-                if (startrecording)
+                if (startsession)
                 {
                     System.IO.File.AppendAllText(gazedatasavingpath, t_str);
                 }
@@ -359,62 +296,56 @@ namespace TobiiTesting1
             }
             // <EndExample>
         }
-
         private void save_Click(object sender, EventArgs e)
         {
             saveAvi = new SaveFileDialog();
-            saveAvi.Filter = "Avi Files (*.avi)|*.avi";
-            saveAvi.FileName= DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
+            //saveAvi.Filter = "Txt Files (*.txt)|*.txt";
+            saveAvi.FileName = DateTimeOffset.Now.ToString("MM_dd_yy_hh_mm_ss");//saveAvi.FileName= DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
             if (saveAvi.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                //iterate the listcameras
-                foreach(FormCameras item in m_cameras)
+                //create a new folder
+                try
                 {
-                    item.StartRecording(saveAvi.FileName.Replace(".", "_"+item.m_index+ "."));                        
+                    m_savingfolder = saveAvi.FileName;
+
+                    // Determine whether the directory exists.
+                    if (Directory.Exists(m_savingfolder))
+                    {
+                        Console.WriteLine("That path exists already.");
+                    }
+                    else
+                    {
+                        DirectoryInfo di = Directory.CreateDirectory(m_savingfolder);
+                        Console.WriteLine("The directory was created successfully at {0}.", Directory.GetCreationTime(m_savingfolder));
+                    }
+                    
+                    GenerateRecordingFile();
+                    
+                    startsession = true;
+
+                    button_endtask.Enabled = true;
+                    textBox_participant.Enabled = true;
+                    comboBox1.Enabled = true;
+                    trialIndex.Enabled = true;
+                    bt_trial.Enabled = true;
+
+                    textBox_score_0.Enabled = true;
+                    textBox_score_1.Enabled = true;
+                    textBox_score_2.Enabled = true;
+                    textBox_score_3.Enabled = true;
+                    textBox_comment.Enabled = true;
                 }
-                foreach (MainWindow item in m_thermalcams)
+                catch 
                 {
-                    item.StartRecording(saveAvi.FileName.Replace(".", "_" + item.m_index + "_TH."));
+                    Console.WriteLine("The process failed: {0}", e.ToString());
                 }
-                
-                //Console.WriteLine(saveAvi.FileName);
-                avisavingpath = saveAvi.FileName;
-                GenerateRecordingFile();
-                if (m_empaticarunning)
-                {
-                    if (checkBox_empatica_0.Checked)
-                    {
-                        m_empatica_0.SavingRecord(saveAvi.FileName);
-                    }
-                    if (checkBox_empatica_1.Checked)
-                    {
-                        m_empatica_1.SavingRecord(saveAvi.FileName);
-                    }
-                    if(!checkBox_empatica_0.Checked && !checkBox_empatica_1.Checked)
-                    {
-                        AsynchronousClient.SavingRecord(saveAvi.FileName);
-                    }
-                        
-                    timer_empatica.Enabled = true;
-                }
-                startrecording = true;
-                save.Enabled = false;
+                finally { }
 
-                button_endtask.Enabled = true;
-
-                textBox_participant.Enabled = true;
-                comboBox1.Enabled = true;
-                trialIndex.Enabled = true;
-                bt_trial.Enabled = true;
-                textBox_score_0.Enabled = true;
-                textBox_score_1.Enabled = true;
-                textBox_score_2.Enabled = true;
-                textBox_score_3.Enabled = true;
-                textBox_comment.Enabled = true;
-
+                //avisavingpath = saveAvi.FileName;
             }
-            
+
         }
+        
 
         
         private bool GenerateRecordingFile()
@@ -425,18 +356,9 @@ namespace TobiiTesting1
 
             var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
 
-            gazedatasavingpath = avisavingpath.Replace(".avi", "_") + "Tobii.txt";
             
-            if (!System.IO.File.Exists(gazedatasavingpath))
-            {
-                //create file
-                using (var t_file = System.IO.File.Create(gazedatasavingpath));
-            }
-
-            System.IO.File.WriteAllText(gazedatasavingpath, "DEVICE,X,Y,Z,PDA_X,PDA_Y,Pupil_left,Pupil_right,UnixTS,TimeStamp\r\n");
-
             //for trialsaving data
-            trialsavingpath = avisavingpath.Replace(".avi", "_") + "Trials.txt";
+            trialsavingpath = m_savingfolder + "_Trials.txt";
 
             if (!System.IO.File.Exists(trialsavingpath))
             {
@@ -470,7 +392,6 @@ namespace TobiiTesting1
             if (videoSource.IsRunning)
             {
                 this.videoSource.Stop();
-                //FileWriter.Close();
 
             }
 
@@ -486,28 +407,6 @@ namespace TobiiTesting1
             label1_score_3.Text = task_performance[comboBox1.SelectedIndex, 3];
             //open the FormCamera, display the realtime image on the picturebox
 
-            /*
-            if (DeviceExist)
-            {
-                CloseVideoSource();
-                //cameraForm.Show();
-
-                videoSource = new VideoCaptureDevice(videoDevices[comboBox1.SelectedIndex].MonikerString);
-                videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
-
-                
-                //videoSource.DesiredFrameSize = new Size(160, 120);//new Size(160, 120);
-                //videoSource.DesiredFrameRate = 10;
-                videoSource.Start();
-
-                label2.Text = "Device running...";
-                //timer1.Enabled = true;
-            }
-            else
-            {
-                label2.Text = "Error: No Device selected.";
-            }
-            */
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -621,10 +520,6 @@ namespace TobiiTesting1
                         m_empatica_1.StartClient(checkBox_empatica_1.Text);
                         checkBox_empatica_1.Enabled = false;
                     }
-                    if(!checkBox_empatica_0.Checked && !checkBox_empatica_1.Checked)
-                    {
-                        AsynchronousClient.StartClient(textBox_empatica.Text);
-                    }
                     
                     bt_empatica.Text = "Stop Empatica";
                 }
@@ -647,10 +542,6 @@ namespace TobiiTesting1
                     m_empatica_1.StopClient();
                     checkBox_empatica_1.Enabled = true;
                 }
-                if (!checkBox_empatica_0.Checked && !checkBox_empatica_1.Checked)
-                {
-                    AsynchronousClient.StopClient();
-                }
                 
                 bt_empatica.Text = "Start Empatica";
             }
@@ -668,7 +559,7 @@ namespace TobiiTesting1
 
         private void timer_empatica_Tick(object sender, EventArgs e)
         {
-            if (startrecording)
+            if (startsession)
             {
                 if (checkBox_empatica_0.Checked)
                 {
@@ -677,10 +568,6 @@ namespace TobiiTesting1
                 if (checkBox_empatica_1.Checked)
                 {
                     m_empatica_1.SavingEverySecond();
-                }
-                if(!checkBox_empatica_0.Checked && !checkBox_empatica_1.Checked)
-                {
-                    AsynchronousClient.SavingEverySecond();
                 }
                 
             }
@@ -719,6 +606,7 @@ namespace TobiiTesting1
             trialIndex.Enabled = true;
             comboBox1.Enabled = true;
             bt_trial.Enabled = true;
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -729,17 +617,20 @@ namespace TobiiTesting1
 
         private void button_endtask_Click(object sender, EventArgs e)
         {
-            foreach (FormCameras item in m_cameras)
+            
+            if (!b_trial_locked)
             {
-                item.StopRecording();
+                MessageBox.Show("Finish the running trial!");
+                return;
             }
-            foreach (MainWindow item in m_thermalcams)
+            if (bt_enter.Enabled)
             {
-                item.StopRecording();
+                MessageBox.Show("Enter the previous score!");
+                return;
             }
 
-            startrecording = false;
-            timer_empatica.Enabled = false;
+            m_starttimer = false;
+            startsession = false;
 
             //loggging
             var local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
@@ -751,9 +642,7 @@ namespace TobiiTesting1
                 string t_str = String.Format("{0},{1},{2},VIDEORECORDING,STOP,NA,NA,NA,NA,NA\r\n", textBox_participant.Text, UnixTimestamp, local_timestamp);
                 System.IO.File.AppendAllText(trialsavingpath, t_str);
             }
-
-            save.Enabled = true;
-
+            
             button_endtask.Enabled = false;
 
             textBox_participant.Enabled = false;
@@ -776,9 +665,9 @@ namespace TobiiTesting1
 
         private void bt_trial_Click(object sender, EventArgs e)
         {
-            if (!startrecording)
+            if (!startsession)
             {
-                MessageBox.Show("Start recording first!");
+                MessageBox.Show("Start session first!");
                 return;
             }
 
@@ -787,11 +676,51 @@ namespace TobiiTesting1
                 MessageBox.Show("Enter the previous score!");
                 return;
             }
+
             var local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
             var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
 
             if (b_trial_locked)
             {
+                string trialinfo= String.Format("task{0}_trial{1}_{2}", comboBox1.SelectedIndex, trialIndex.Text, UnixTimestamp);
+                foreach (FormCameras item in m_cameras)
+                {
+                    string filepath = String.Format("{0}\\Camera{1}_{2}.avi", m_savingfolder, item.m_index, trialinfo);
+                    item.StartRecording(filepath);
+                }
+                foreach (MainWindow item in m_thermalcams)
+                {
+                    string filepath = String.Format("{0}\\Thermal{1}_{2}.avi", m_savingfolder, item.m_index, trialinfo);
+                    item.StartRecording(filepath);
+                }
+
+                //testing
+                //m_empaticarunning = true;
+                if (m_empaticarunning)
+                {
+                    if (checkBox_empatica_0.Checked)
+                    {
+                        m_empatica_0.SavingRecord(m_savingfolder, trialinfo);
+                    }
+                    if (checkBox_empatica_1.Checked)
+                    {
+                        m_empatica_1.SavingRecord(m_savingfolder, trialinfo);
+                    }
+
+                    timer_empatica.Enabled = true;
+                }
+                //m_empaticarunning = false;
+
+                gazedatasavingpath = String.Format("{0}\\Tobii_{1}.txt", m_savingfolder,  trialinfo); //m_savingfolder + "_Tobii.txt";
+
+                if (!System.IO.File.Exists(gazedatasavingpath))
+                {
+                    //create file
+                    using (var t_file = System.IO.File.Create(gazedatasavingpath)) ;
+                }
+
+                System.IO.File.WriteAllText(gazedatasavingpath, "DEVICE,X,Y,Z,PDA_X,PDA_Y,Pupil_left,Pupil_right,UnixTS,TimeStamp\r\n");
+
                 //String.Format("{0},{1},{2},{3},{4},\"{5}\"\r\n", str_trial, task_list_log[comboBox1.SelectedIndex], trialIndex.Text, label_time.Text, str_score, textBox_comment.Text.Replace("\r\n", " "));
                 string t_str = String.Format("{0},{1},{2},Trial,START,{3},{4},NA,NA,NA\r\n", textBox_participant.Text, UnixTimestamp, local_timestamp, task_list_log[comboBox1.SelectedIndex], trialIndex.Text);
                                 
@@ -807,6 +736,16 @@ namespace TobiiTesting1
             }
             else
             {
+                foreach (FormCameras item in m_cameras)
+                {
+                    item.StopRecording();
+                }
+                foreach (MainWindow item in m_thermalcams)
+                {
+                    item.StopRecording();
+                }
+                timer_empatica.Enabled = false;
+
                 //write end timestamp into the file
                 str_trial = String.Format("{0},{1},{2},Trial,END,{3},{4}", textBox_participant.Text, UnixTimestamp, local_timestamp, task_list_log[comboBox1.SelectedIndex], trialIndex.Text);
                 //t_str = String.Format("{0},Trial,{1},END,{2},{3},{4},\"{5}\"\r\n", textBox_participant.Text, trialIndex.Text, textBox_score_0.Text, UnixTimestamp, local_timestamp, textBox_comment.Text.Replace("\r\n"," "));
@@ -822,6 +761,10 @@ namespace TobiiTesting1
                 bt_trial.Enabled = false;
 
             }
+            //save video
+            //iterate the listcameras
+            
+            
             b_trial_locked = !b_trial_locked;
         }
 

@@ -135,7 +135,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsynchronousClient.cs" />
     <Compile Include="AsynchronousClientD.cs" />
     <Compile Include="DiscoveryDialog.cs">
       <SubType>Form</SubType>
@@ -149,23 +148,11 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCamera.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormCamera.Designer.cs">
-      <DependentUpon>FormCamera.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormCameras.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormCameras.Designer.cs">
       <DependentUpon>FormCameras.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form_Empatica.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form_Empatica.Designer.cs">
-      <DependentUpon>Form_Empatica.cs</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -182,14 +169,8 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCamera.resx">
-      <DependentUpon>FormCamera.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormCameras.resx">
       <DependentUpon>FormCameras.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form_Empatica.resx">
-      <DependentUpon>Form_Empatica.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>

@@ -42,6 +42,9 @@ namespace TobiiTesting1
         public bool m_duplicate=false;// duplicate display on the main window
 
         public List<Bitmap> m_framelist = new List<Bitmap>(50);
+        public long m_StartTick = DateTime.Now.Ticks;
+        
+        public bool m_stopwriting = false;
 
         public void StartRecording(string videofilepath)
         {
@@ -50,11 +53,19 @@ namespace TobiiTesting1
                 h = videoimg.Height;//videoSource.VideoResolution.FrameSize.Height;// 
                 w = videoimg.Width; //videoSource.VideoResolution.FrameSize.Width;// 
             }
-            FileWriter.Close();
+            if (FileWriter.IsOpen)
+            {
+                FileWriter.Close();
+            }
+
+            
             FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Default, 5000000);
-            //FileWriter.WriteVideoFrame(videoimg);
+            FileWriter.WriteVideoFrame(videoimg);
 
             m_startrecording = true;
+
+            m_StartTick = DateTime.Now.Ticks;
+            m_stopwriting = false;
         }
 
         public void StopRecording()
@@ -131,55 +142,7 @@ namespace TobiiTesting1
         {
             m_duplicate = t_status;
         }
-
-        private void video_NewFrame_2nd(object sender, NewFrameEventArgs eventArgs)
-        {
-            if (m_duplicate)
-            {
-                videoimg = (Bitmap)eventArgs.Frame.Clone();
-
-                m_framelist.Add(videoimg);
-                if (m_framelist.Count > 100)
-                {
-                    m_framelist[0].Dispose();
-                    m_framelist.RemoveAt(0);
-                }
-                
-            }
-            else
-            {
-                Bitmap t_frame = videoimg;
-
-                videoimg = (Bitmap)eventArgs.Frame.Clone();
-
-                if (t_frame != null)
-                {
-                    t_frame.Dispose();
-                }
-            }
-            
-            
-            //pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
-
-            try
-            {
-                //pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();                    
-                // save image to file
-                if (m_startrecording && FileWriter.IsOpen && videoimg != null)
-                {
-                    FileWriter.WriteVideoFrame(videoimg);
-                    FileWriter.Flush();
-                }
-                pictureBox1.Image = videoimg;
-            }
-            catch
-            {
-                Console.WriteLine("object is used somewhere else");
-            }
-            
-
-        }
-
+        
         private void video_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             videoimg = (Bitmap)eventArgs.Frame.Clone();
@@ -190,6 +153,7 @@ namespace TobiiTesting1
                 if (m_startrecording && FileWriter.IsOpen && videoimg != null)
                 {
                     FileWriter.WriteVideoFrame(videoimg);
+                    
                     FileWriter.Flush();
                 }
                 pictureBox1.Image = videoimg;
@@ -197,45 +161,24 @@ namespace TobiiTesting1
             }
             catch
             {
-                Console.WriteLine("object is used somewhere else");
+                Console.WriteLine("object is used somewhere else 2");
             }
 
             
-            if (m_framelist.Count > 50)//100
+            if (m_framelist.Count > 100)//100
             {
                 m_framelist[0].Dispose();
                 m_framelist.RemoveAt(0);
             }
 
-            if(!m_startrecording && FileWriter.IsOpen)
+            if(!m_startrecording && FileWriter.IsOpen && !m_stopwriting)
             {
                 Console.WriteLine("stop recording");
                 FileWriter.Close();
+                m_stopwriting = true;
             }
         }
 
-
-        private void video_NewFrame_fun(object sender, NewFrameEventArgs eventArgs)
-        {
-            videoimg = (Bitmap)eventArgs.Frame.Clone();
-
-            //do processing here
-            try
-            {
-                //pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
-                // save image to file
-                if (m_startrecording && FileWriter.IsOpen && videoimg != null)
-                {
-                    FileWriter.WriteVideoFrame(videoimg);
-                    FileWriter.Flush();
-                }
-                pictureBox1.Image = videoimg;// (Bitmap)eventArgs.Frame.Clone();
-            }
-            catch
-            {
-                Console.WriteLine("object is used somewhere else");
-            }
-        }
 
         //close the device safely
         public void CloseVideoSource()

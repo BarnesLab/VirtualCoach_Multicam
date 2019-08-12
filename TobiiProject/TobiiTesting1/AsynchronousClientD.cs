@@ -155,15 +155,16 @@ namespace TobiiTesting1
         }
 
 
-        public void SavingRecord(string filepath)
+        public void SavingRecord(string filepath,string trialinfo)
         {
             m_startsaving = true;
-            
+
             //GenerateRecordingFile(filepath);
 
-            var local_timestamp = DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
-            empaticadatasavingpath = filepath.Replace(".avi", "_") + m_str_empaticaDevice + "_EP.txt";
-
+            //var local_timestamp = DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
+            //empaticadatasavingpath = filepath + m_str_empaticaDevice + "_EP.txt";
+            empaticadatasavingpath = String.Format("{0}\\EP{1}_{2}.txt", filepath, m_str_empaticaDevice, trialinfo);
+            
             if (!System.IO.File.Exists(empaticadatasavingpath))
             {
                 //create file
