@@ -549,7 +549,7 @@ namespace TobiiTesting1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1802, 1003);
+            this.ClientSize = new System.Drawing.Size(1790, 1017);
             this.Controls.Add(this.button_endtask);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox_empatica);
