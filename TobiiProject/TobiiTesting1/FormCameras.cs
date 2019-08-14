@@ -268,23 +268,28 @@ namespace TobiiTesting1
 
         private void timer_saveframe_Tick(object sender, EventArgs e)
         {
-            
-            if(DateTime.Now.Ticks - previous < 300000)
+           
+            try
+            {
+                if (DateTime.Now.Ticks - previous < 300000)
+                {
+                    System.Threading.Thread.Sleep(10);
+                }
+
+                TimeSpan frameOffset = new TimeSpan(DateTime.Now.Ticks - StartTick);
+
+                Bitmap videoimg2 = (Bitmap)pictureBox1.Image.Clone();
+                FileWriter.WriteVideoFrame(videoimg2, frameOffset);
+                FileWriter.Flush();
+                videoimg2.Dispose();
+                previous = DateTime.Now.Ticks;
+            }
+            catch
             {
                 Console.WriteLine(DateTime.Now.Ticks - previous);
-                System.Threading.Thread.Sleep(10);
-                //return;
             }
-
-            TimeSpan frameOffset = new TimeSpan(DateTime.Now.Ticks - StartTick);
-
-            Bitmap videoimg2 = (Bitmap)pictureBox1.Image.Clone();
-
-            FileWriter.WriteVideoFrame(videoimg2, frameOffset);
-            FileWriter.Flush();
-
-            videoimg2.Dispose();
-            previous = DateTime.Now.Ticks;
+            
+            
         }
 
         private void FormCameras_FormClosed(object sender, FormClosedEventArgs e)
