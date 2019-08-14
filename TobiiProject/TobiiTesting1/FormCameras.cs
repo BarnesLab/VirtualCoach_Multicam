@@ -16,18 +16,21 @@ using Tobii.Research;
 
 using System.IO;
 using System.Diagnostics;
-using System.Linq;
 
 
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using System.Drawing;
+
+using System.Threading;
 
 namespace TobiiTesting1
 {
     public partial class FormCameras : Form
     {
+        //lock thread
+        private static ReaderWriterLockSlim _readWriteLock = new ReaderWriterLockSlim();
+
         private string m_deviceMoniker;
         private VideoCaptureDevice videoSource = null;
         public Bitmap videoimg;
@@ -42,10 +45,16 @@ namespace TobiiTesting1
         public bool m_duplicate=false;// duplicate display on the main window
 
         public List<Bitmap> m_framelist = new List<Bitmap>(50);
-        public long m_StartTick = DateTime.Now.Ticks;
-        
-        public bool m_stopwriting = false;
+        public long StartTick = DateTime.Now.Ticks;
+        //public bool m_stopwriting = true;
+        long previous = DateTime.Now.Ticks;
 
+
+        public bool CheckFileWriterOpen()
+        {
+
+            return FileWriter.IsOpen;
+        }
         public void StartRecording(string videofilepath)
         {
             if (!m_changed)
@@ -58,35 +67,50 @@ namespace TobiiTesting1
                 FileWriter.Close();
             }
 
-            
-            FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Default, 5000000);
-            FileWriter.WriteVideoFrame(videoimg);
+            _readWriteLock.EnterWriteLock();
+            try
+            {
+                FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Default, 1000000);//5000000
+                //FileWriter.WriteVideoFrame(videoimg);
+                m_startrecording = true;
+            }
+            catch
+            {
 
-            m_startrecording = true;
+            }
+            _readWriteLock.ExitWriteLock();
 
-            m_StartTick = DateTime.Now.Ticks;
-            m_stopwriting = false;
+
+            StartTick = DateTime.Now.Ticks;
+            timer_saveframe.Enabled = true;
         }
 
         public void StopRecording()
         {
-            //FileWriter.Close();
+           
+            //_readWriteLock.EnterWriteLock();
+            try
+            {
+                timer_saveframe.Enabled = false;
+                FileWriter.Close();
+                m_startrecording = false;
+                Console.WriteLine("stop recording");
+            }
+            finally
+            {
+                //_readWriteLock.ExitWriteLock();
+            }
+
+        }
+        public void StopRecording_ori()
+        {
             m_startrecording = false;
-            //wait 0.1 s
-            
+
         }
         public FormCameras()
         {
             InitializeComponent();
         }
-        /*
-        public Image GetPicture
-        {
-            get { return pictureBox1.Image; }
-            //return videoimg;
-            //return pictureBox1.Image;
-        }
-        */
 
         public Image GetPicture()
         {
@@ -146,16 +170,11 @@ namespace TobiiTesting1
         private void video_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             videoimg = (Bitmap)eventArgs.Frame.Clone();
-            m_framelist.Add(videoimg);
-
+            
+            //_readWriteLock.EnterWriteLock();
             try
             {
-                if (m_startrecording && FileWriter.IsOpen && videoimg != null)
-                {
-                    FileWriter.WriteVideoFrame(videoimg);
-                    
-                    FileWriter.Flush();
-                }
+                
                 pictureBox1.Image = videoimg;
                                 
             }
@@ -163,22 +182,71 @@ namespace TobiiTesting1
             {
                 Console.WriteLine("object is used somewhere else 2");
             }
+            finally
+            {
+                //_readWriteLock.ExitWriteLock();
+            }
+            m_framelist.Add(videoimg);
 
+
+            if (m_framelist.Count > 50)//100
+            {
+                m_framelist[0].Dispose();
+                m_framelist.RemoveAt(0);
+            }
             
-            if (m_framelist.Count > 100)//100
+        }
+        private void video_NewFrame_ori(object sender, NewFrameEventArgs eventArgs)
+        {
+            videoimg = (Bitmap)eventArgs.Frame.Clone();
+
+            //_readWriteLock.EnterWriteLock();
+            try
+            {
+                if (m_startrecording && FileWriter.IsOpen && videoimg != null)
+                {
+                    //FileWriter.WriteVideoFrame(videoimg);
+                    FileWriter.WriteVideoFrame(videoimg);
+
+                    FileWriter.Flush();
+                }
+                pictureBox1.Image = videoimg;
+
+            }
+            catch
+            {
+                Console.WriteLine("object is used somewhere else 2");
+            }
+            finally
+            {
+                //_readWriteLock.ExitWriteLock();
+            }
+            m_framelist.Add(videoimg);
+
+
+            if (m_framelist.Count > 50)//100
             {
                 m_framelist[0].Dispose();
                 m_framelist.RemoveAt(0);
             }
 
-            if(!m_startrecording && FileWriter.IsOpen && !m_stopwriting)
+            if (!m_startrecording && FileWriter.IsOpen)
             {
-                Console.WriteLine("stop recording");
-                FileWriter.Close();
-                m_stopwriting = true;
+
+                //FileWriter.Close();
+
+                //_readWriteLock.EnterWriteLock();
+                try
+                {
+                    FileWriter.Close();
+                    Console.WriteLine("stop recording");
+                }
+                finally
+                {
+                    //_readWriteLock.ExitWriteLock();
+                }
             }
         }
-
 
         //close the device safely
         public void CloseVideoSource()
@@ -196,6 +264,27 @@ namespace TobiiTesting1
         private void FormCameras_FormClosing(object sender, FormClosingEventArgs e)
         {
             CloseVideoSource();
+        }
+
+        private void timer_saveframe_Tick(object sender, EventArgs e)
+        {
+            
+            if(DateTime.Now.Ticks - previous < 300000)
+            {
+                Console.WriteLine(DateTime.Now.Ticks - previous);
+                System.Threading.Thread.Sleep(10);
+                //return;
+            }
+
+            TimeSpan frameOffset = new TimeSpan(DateTime.Now.Ticks - StartTick);
+
+            Bitmap videoimg2 = (Bitmap)pictureBox1.Image.Clone();
+
+            FileWriter.WriteVideoFrame(videoimg2, frameOffset);
+            FileWriter.Flush();
+
+            videoimg2.Dispose();
+            previous = DateTime.Now.Ticks;
         }
 
         private void FormCameras_FormClosed(object sender, FormClosedEventArgs e)
