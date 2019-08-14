@@ -763,7 +763,7 @@ namespace TobiiTesting1
             if (b_trial_locked)
             {
                 
-                string trialinfo= String.Format("task{0}_trial{1}_{2}", comboBox1.SelectedIndex, trialIndex.Text, UnixTimestamp);
+                string trialinfo= String.Format("task{0}_trial{1}_{2}", task_list_log[comboBox1.SelectedIndex], trialIndex.Text, UnixTimestamp);
                 foreach (FormCameras item in m_cameras)
                 {
                     string filepath = String.Format("{0}\\Camera{1}_{2}.avi", m_savingfolder, item.m_index, trialinfo);
