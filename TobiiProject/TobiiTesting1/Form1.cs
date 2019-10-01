@@ -122,7 +122,8 @@ namespace TobiiTesting1
                     }
                     else
                     {
-                        item1.Checked = true;
+                        //item1.Checked = true;
+                        item1.Checked = false;
                     }
                                        
                     item1.SubItems.Add(device.Name);
