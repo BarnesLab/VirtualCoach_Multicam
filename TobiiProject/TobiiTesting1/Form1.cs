@@ -253,18 +253,19 @@ namespace TobiiTesting1
                 var local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
                 var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
 
-                var t_str = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}\r\n",
+                var t_str = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}\r\n",
                     e.LeftEye.GazeOrigin.Validity,
                     e.LeftEye.GazeOrigin.PositionInUserCoordinates.X,
                     e.LeftEye.GazeOrigin.PositionInUserCoordinates.Y,
                     e.LeftEye.GazeOrigin.PositionInUserCoordinates.Z,
                     e.LeftEye.GazePoint.PositionOnDisplayArea.X,
                     e.LeftEye.GazePoint.PositionOnDisplayArea.Y,
+                    e.RightEye.GazePoint.PositionOnDisplayArea.X,
+                    e.RightEye.GazePoint.PositionOnDisplayArea.Y,
                     e.LeftEye.Pupil.PupilDiameter,
                     e.RightEye.Pupil.PupilDiameter,
                     UnixTimestamp,
                 local_timestamp);
-
                 
 
                
@@ -833,7 +834,7 @@ namespace TobiiTesting1
                 local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
                 UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
 
-                System.IO.File.WriteAllText(gazedatasavingpath, "DEVICE,X,Y,Z,PDA_X,PDA_Y,Pupil_left,Pupil_right,UnixTS,TimeStamp\r\n");
+                System.IO.File.WriteAllText(gazedatasavingpath, "DEVICE,X,Y,Z,LPDA_X,LPDA_Y,RPDA_X,RPDA_Y,Pupil_left,Pupil_right,UnixTS,TimeStamp\r\n");
 
                 eyetrackingrecordenabled = true;
                 string t_str = String.Format("{{\"participant\":\"{0}\"," +
