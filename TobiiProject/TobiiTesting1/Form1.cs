@@ -45,6 +45,7 @@ namespace TobiiTesting1
         //private VideoFileWriter FileWriter = new VideoFileWriter();
         private SaveFileDialog saveAvi;
         public static bool startsession;
+        public static bool eyetrackingrecordenabled = false;
 
         private string trialsavingpath = "";
 
@@ -91,7 +92,7 @@ namespace TobiiTesting1
 
         private static System.Timers.Timer aTimer;
         private static bool m_starttimer;
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -119,6 +120,7 @@ namespace TobiiTesting1
                     if (device.Name.Contains("eBUS"))
                     {
                         item1.Checked = false;
+
                     }
                     else
                     {
@@ -289,7 +291,7 @@ namespace TobiiTesting1
                  */
 
                 //System.IO.File.WriteAllText(filename, t_str);
-                if (startsession)
+                if (eyetrackingrecordenabled)
                 {
                     System.IO.File.AppendAllText(gazedatasavingpath, t_str);
                 }
@@ -340,7 +342,11 @@ namespace TobiiTesting1
                 {
                     Console.WriteLine("The process failed: {0}", e.ToString());
                 }
-                finally { }
+                finally
+                {
+                    save.Enabled = false;
+                    System.Threading.Thread.Sleep(500);
+                }
 
                 //avisavingpath = saveAvi.FileName;
             }
@@ -359,7 +365,7 @@ namespace TobiiTesting1
 
             
             //for trialsaving data
-            trialsavingpath = m_savingfolder + "_Trials.txt";
+            trialsavingpath = m_savingfolder+ "\\Trials_" + UnixTimestamp.ToString()+".txt";
 
             if (!System.IO.File.Exists(trialsavingpath))
             {
@@ -368,24 +374,79 @@ namespace TobiiTesting1
 
                 //trial format: participant,recordtype,index,status,score,unixtimestamp,localtimestamp,comment
                 //participant,unixtimestamp,localtimestamp,recordtype,status,taskindex,trialindex,score,comment
-                string t_str = "participant,unixtimestamp,localtimestamp,recordtype,status,taskindex,trialindex,duration,score,comment\r\n";
+
+                //string t_str = "participant,unixtimestamp,localtimestamp,recordtype,status,taskindex,trialindex,duration,score,comment\r\n";
+                //\"participant\":,\"unixtimestamp\":,\"localtimestamp\":,\"recordtype\":,\"status\":,\"taskindex\":,\"trialindex\":,\"duration\":,\"score\":,\"comment\":
+                //start session
+                string t_str = "{\r\n";
                 System.IO.File.AppendAllText(trialsavingpath, t_str);
 
-                t_str = String.Format("{0},{1},{2},VIDEORECORDING,START,NA,NA,NA,NA,NA\r\n", textBox_participant.Text,UnixTimestamp, local_timestamp);                
+                //t_str = String.Format("{0},{1},{2},SESSION,START,NA,NA,NA,NA,NA\r\n", textBox_participant.Text, UnixTimestamp, local_timestamp);
+
+                t_str = String.Format("{{\"participant\":\"{0}\"," +
+                    "\"unixtimestamp\":\"{1}\"," +
+                    "\"localtimestamp\":\"{2}\"," +
+                    "\"recordtype\":\"SESSION\"," +
+                    "\"status\":\"START\"," +
+                    "\"taskindex\":\"NA\"," +
+                    "\"trialindex\":\"NA\"," +
+                    "\"duration\":\"NA\"," +
+                    "\"score\":\"NA\"," +
+                    "\"comment\":\"NA\"}},\r\n", 
+                    textBox_participant.Text, UnixTimestamp, local_timestamp);
+
                 System.IO.File.AppendAllText(trialsavingpath, t_str);
 
-                /*
-                t_str = String.Format("Trial{0},START,{1},{2}\r\n", trialIndex.Text, UnixTimestamp, local_timestamp);
-                System.IO.File.AppendAllText(trialsavingpath, t_str);
-                bt_trial.Text = "End the Trial " + trialIndex.Text;
-
-                b_trial_locked = !b_trial_locked;*/
             }
             
             return true;
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (bt_enter.Enabled)
+            {
+                var str_score = String.Format("\"{{1:{0},2:{1},3:{2},4:{3}}}\"", textBox_score_0.Text, textBox_score_1.Text, textBox_score_2.Text, textBox_score_3.Text);
+
+                //t_str = String.Format("{0},Trial,{1},END,{2},{3},{4},\"{5}\"\r\n", textBox_participant.Text, trialIndex.Text, textBox_score_0.Text, UnixTimestamp, local_timestamp, textBox_comment.Text.Replace("\r\n"," "));
+                //string t_str = String.Format("{0},{1},{2},\"{3}\"\r\n", str_trial, label_time.Text, str_score, textBox_comment.Text.Replace("\r\n", " "));
+
+                string t_str = String.Format("{{{0}" +
+                        "\"duration\":\"{1}\"," +
+                        "\"score\":\"{2}\"," +
+                        "\"comment\":\"{3}\"}},\r\n",
+                        str_trial, label_time.Text, str_score, textBox_comment.Text.Replace("\r\n", " "));
+
+                System.IO.File.AppendAllText(trialsavingpath, t_str);
+
+            }
+            if (button_endtask.Enabled)
+            {
+                var local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
+                var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+
+                if (System.IO.File.Exists(trialsavingpath))
+                {
+                    string t_str = String.Format("{{\"participant\":\"{0}\"," +
+                        "\"unixtimestamp\":\"{1}\"," +
+                        "\"localtimestamp\":\"{2}\"," +
+                        "\"recordtype\":\"SESSION\"," +
+                        "\"status\":\"STOP\"," +
+                        "\"taskindex\":\"NA\"," +
+                        "\"trialindex\":\"NA\"," +
+                        "\"duration\":\"NA\"," +
+                        "\"score\":\"NA\"," +
+                        "\"comment\":\"NA\"}}\r\n",
+                        textBox_participant.Text, UnixTimestamp, local_timestamp);
+
+                    //participant,unixtimestamp,localtimestamp,recordtype,status,taskindex,trialindex,duration,score,comment
+                    // t_str = String.Format("{0},{1},{2},SESSION,STOP,NA,NA,NA,NA,NA\r\n", textBox_participant.Text, UnixTimestamp, local_timestamp);
+                    System.IO.File.AppendAllText(trialsavingpath, t_str);
+
+                    t_str = "}\r\n";
+                    System.IO.File.AppendAllText(trialsavingpath, t_str);
+
+                }
+            }
             aTimer.Stop();
             aTimer.Dispose();
             if (videoSource == null)
@@ -394,10 +455,8 @@ namespace TobiiTesting1
             {
                 this.videoSource.Stop();
 
-            }
-
+            }            
             
-
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -493,7 +552,6 @@ namespace TobiiTesting1
 
             if (t_count>0)
             {
-                //timer1.Enabled = true;
                 //_cascadeClassifier = new CascadeClassifier(@"..\data\haarcascades\haarcascade_frontalface_alt2.xml");
             }
 
@@ -590,7 +648,15 @@ namespace TobiiTesting1
             var str_score = String.Format("\"{{1:{0},2:{1},3:{2},4:{3}}}\"", textBox_score_0.Text, textBox_score_1.Text, textBox_score_2.Text, textBox_score_3.Text);
 
             //t_str = String.Format("{0},Trial,{1},END,{2},{3},{4},\"{5}\"\r\n", textBox_participant.Text, trialIndex.Text, textBox_score_0.Text, UnixTimestamp, local_timestamp, textBox_comment.Text.Replace("\r\n"," "));
-            string t_str = String.Format("{0},{1},{2},\"{3}\"\r\n", str_trial, label_time.Text, str_score, textBox_comment.Text.Replace("\r\n", " "));
+            //string t_str = String.Format("{0},{1},{2},\"{3}\"\r\n", str_trial, label_time.Text, str_score, textBox_comment.Text.Replace("\r\n", " "));
+
+            string t_str = String.Format("{{{0}"+
+                    "\"duration\":\"{1}\"," +
+                    "\"score\":\"{2}\"," +
+                    "\"comment\":\"{3}\"}},\r\n",
+                    str_trial, label_time.Text, str_score, textBox_comment.Text.Replace("\r\n", " "));
+
+
             System.IO.File.AppendAllText(trialsavingpath, t_str);
 
             textBox_comment.Text = "";
@@ -639,11 +705,27 @@ namespace TobiiTesting1
 
             if (System.IO.File.Exists(trialsavingpath))
             {
+                string t_str = String.Format("{{\"participant\":\"{0}\"," +
+                    "\"unixtimestamp\":\"{1}\"," +
+                    "\"localtimestamp\":\"{2}\"," +
+                    "\"recordtype\":\"SESSION\"," +
+                    "\"status\":\"STOP\"," +
+                    "\"taskindex\":\"NA\"," +
+                    "\"trialindex\":\"NA\"," +
+                    "\"duration\":\"NA\"," +
+                    "\"score\":\"NA\"," +
+                    "\"comment\":\"NA\"}}\r\n",
+                    textBox_participant.Text, UnixTimestamp, local_timestamp);
+
                 //participant,unixtimestamp,localtimestamp,recordtype,status,taskindex,trialindex,duration,score,comment
-                string t_str = String.Format("{0},{1},{2},VIDEORECORDING,STOP,NA,NA,NA,NA,NA\r\n", textBox_participant.Text, UnixTimestamp, local_timestamp);
+                // t_str = String.Format("{0},{1},{2},SESSION,STOP,NA,NA,NA,NA,NA\r\n", textBox_participant.Text, UnixTimestamp, local_timestamp);
                 System.IO.File.AppendAllText(trialsavingpath, t_str);
-            }
-            
+
+                t_str = "}\r\n";
+                System.IO.File.AppendAllText(trialsavingpath, t_str);
+
+            }            
+
             button_endtask.Enabled = false;
 
             textBox_participant.Enabled = false;
@@ -656,7 +738,7 @@ namespace TobiiTesting1
             textBox_score_3.Enabled = false;
             textBox_comment.Enabled = false;
             bt_enter.Enabled = false;
-
+            save.Enabled = true;
         }
 
         private void listView_CameraControl_SelectedIndexChanged(object sender, EventArgs e)
@@ -683,17 +765,45 @@ namespace TobiiTesting1
 
             if (b_trial_locked)
             {
-                string trialinfo= String.Format("task{0}_trial{1}_{2}", comboBox1.SelectedIndex, trialIndex.Text, UnixTimestamp);
+                
+                string trialinfo= String.Format("task{0}_trial{1}_{2}", task_list_log[comboBox1.SelectedIndex], trialIndex.Text, UnixTimestamp);
                 foreach (FormCameras item in m_cameras)
                 {
                     string filepath = String.Format("{0}\\Camera{1}_{2}.avi", m_savingfolder, item.m_index, trialinfo);
-                    item.StartRecording(filepath);
+                    item.StartRecording(filepath);                           
                 }
                 foreach (MainWindow item in m_thermalcams)
                 {
                     string filepath = String.Format("{0}\\Thermal{1}_{2}.avi", m_savingfolder, item.m_index, trialinfo);
-                    item.StartRecording(filepath);
+                    item.StartRecording(filepath);                    
                 }
+
+                
+                //wait until all opened
+                /*
+                int t_count = m_thermalcams.Count + m_cameras.Count;
+                while (t_count==0)
+                {
+                    foreach (FormCameras item in m_cameras)
+                    {
+                        while (item.CheckFileWriterOpen())
+                        {
+                            t_count--;
+                            System.Threading.Thread.Sleep(500);
+                        }
+
+                    }
+                    foreach (MainWindow item in m_thermalcams)
+                    {
+                        while (item.CheckFileWriterOpen())
+                        {
+                            t_count--;
+                            System.Threading.Thread.Sleep(500);
+                        }
+                    }
+                    
+                }
+                */
 
                 //testing
                 //m_empaticarunning = true;
@@ -720,10 +830,23 @@ namespace TobiiTesting1
                     using (var t_file = System.IO.File.Create(gazedatasavingpath)) ;
                 }
 
+                local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
+                UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+
                 System.IO.File.WriteAllText(gazedatasavingpath, "DEVICE,X,Y,Z,PDA_X,PDA_Y,Pupil_left,Pupil_right,UnixTS,TimeStamp\r\n");
 
-                //String.Format("{0},{1},{2},{3},{4},\"{5}\"\r\n", str_trial, task_list_log[comboBox1.SelectedIndex], trialIndex.Text, label_time.Text, str_score, textBox_comment.Text.Replace("\r\n", " "));
-                string t_str = String.Format("{0},{1},{2},Trial,START,{3},{4},NA,NA,NA\r\n", textBox_participant.Text, UnixTimestamp, local_timestamp, task_list_log[comboBox1.SelectedIndex], trialIndex.Text);
+                eyetrackingrecordenabled = true;
+                string t_str = String.Format("{{\"participant\":\"{0}\"," +
+                    "\"unixtimestamp\":\"{1}\"," +
+                    "\"localtimestamp\":\"{2}\"," +
+                    "\"recordtype\":\"TRIAL\"," +
+                    "\"status\":\"START\"," +
+                    "\"taskindex\":\"{3}\"," +
+                    "\"trialindex\":\"{4}\"," +
+                    "\"duration\":\"NA\"," +
+                    "\"score\":\"NA\"," +
+                    "\"comment\":\"NA\"}},\r\n",
+                    textBox_participant.Text, UnixTimestamp, local_timestamp, task_list_log[comboBox1.SelectedIndex], trialIndex.Text);
                                 
                 bt_trial.Text = "End the Trial " + trialIndex.Text;
                 bt_enter.Enabled = false;
@@ -731,6 +854,8 @@ namespace TobiiTesting1
                 comboBox1.Enabled = false;
 
                 System.IO.File.AppendAllText(trialsavingpath, t_str);
+
+                System.Threading.Thread.Sleep(500);
 
                 m_trialstart = DateTime.Now;
                 timer_main.Enabled = true;
@@ -746,12 +871,19 @@ namespace TobiiTesting1
                     item.StopRecording();
                 }
                 timer_empatica.Enabled = false;
-
+                eyetrackingrecordenabled = false;
                 //write end timestamp into the file
-                str_trial = String.Format("{0},{1},{2},Trial,END,{3},{4}", textBox_participant.Text, UnixTimestamp, local_timestamp, task_list_log[comboBox1.SelectedIndex], trialIndex.Text);
-                //t_str = String.Format("{0},Trial,{1},END,{2},{3},{4},\"{5}\"\r\n", textBox_participant.Text, trialIndex.Text, textBox_score_0.Text, UnixTimestamp, local_timestamp, textBox_comment.Text.Replace("\r\n"," "));
+                //str_trial = String.Format("{0},{1},{2},Trial,END,{3},{4}", textBox_participant.Text, UnixTimestamp, local_timestamp, task_list_log[comboBox1.SelectedIndex], trialIndex.Text);
 
-                
+                str_trial = String.Format("\"participant\":\"{0}\"," +
+                    "\"unixtimestamp\":\"{1}\"," +
+                    "\"localtimestamp\":\"{2}\"," +
+                    "\"recordtype\":\"TRIAL\"," +
+                    "\"status\":\"END\"," +
+                    "\"taskindex\":\"{3}\"," +
+                    "\"trialindex\":\"{4}\","
+                    , textBox_participant.Text, UnixTimestamp, local_timestamp, task_list_log[comboBox1.SelectedIndex], trialIndex.Text);
+
 
                 bt_trial.Text = "Start A New Trial";
                 

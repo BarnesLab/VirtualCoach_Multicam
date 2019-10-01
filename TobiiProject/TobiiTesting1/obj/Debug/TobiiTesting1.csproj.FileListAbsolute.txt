@@ -56,9 +56,7 @@ D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\tr\ZedGraph.resources.dll
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\zh-cn\ZedGraph.resources.dll
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\zh-tw\ZedGraph.resources.dll
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.FormCamera.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.FormCameras.resources
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.Form_Empatica.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.csproj.GenerateResource.cache
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.csproj.CoreCompileInputs.cache
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.csproj.CopyComplete
@@ -210,8 +208,6 @@ D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii_0804\TobiiProject\TobiiTest
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii_0804\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.csproj.CopyComplete
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii_0804\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.exe
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii_0804\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.pdb
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Flir.Atlas.Image.dll
-D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Flir.Atlas.Live.dll
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.DiscoveryDialog.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.MainWindow.resources
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.Form1.resources
@@ -221,3 +217,10 @@ D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\VirtualCoach.exe
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\VirtualCoach.pdb
 D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\VirtualCoach.Properties.Resources.resources
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Flir.Cronos.Common.dll
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Flir.Cronos.Filter.dll
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Flir.Cronos.Filter.Adapter.dll
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Flir.FormatPlugin.IRSDK.dll
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\Flir.Cronos.Panorama.dll
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\bin\Debug\FLIRCommunicationsAdapter.dll
+D:\Tianzi\workspace\TobbiSDKTesting\eyetrackingtobii\TobiiProject\TobiiTesting1\obj\Debug\TobiiTesting1.csprojAssemblyReference.cache

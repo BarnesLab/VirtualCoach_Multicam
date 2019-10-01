@@ -63,6 +63,10 @@ namespace TobiiTesting1
             //_updateGuiTimer.Start();
 
         }
+        public bool CheckFileWriterOpen()
+        {
+            return FileWriter.IsOpen; 
+        }
 
         void MainWindow_Src1Changed(object sender, Flir.Atlas.Image.ImageChangedEventArgs e)
         {
