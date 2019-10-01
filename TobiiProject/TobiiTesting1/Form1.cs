@@ -92,6 +92,8 @@ namespace TobiiTesting1
 
         private static System.Timers.Timer aTimer;
         private static bool m_starttimer;
+
+        private static float m_eyetrackerfrequency = 120;
         
         public Form1()
         {
@@ -205,11 +207,56 @@ namespace TobiiTesting1
             }
             var eyeTracker = eyeTrackers[0];
 
+
+            IEyeTracker_GazeOutputFrequencies.Execute(eyeTracker);
+            label_pupil.Text = "eyetracker frequency: "+m_eyetrackerfrequency.ToString()+" Hz";
+
             CallEyeTrackerManager.Execute(eyeTracker);
+
             
+
             IEyeTracker_GazeDataReceived.Execute(eyeTracker,this);
 
         }
+
+        internal static class IEyeTracker_GazeOutputFrequencies
+        {
+            internal static void Execute(IEyeTracker eyeTracker)
+            {
+                GazeOutputFrequencies(eyeTracker);
+            }
+            // <BeginExample>
+            internal static void GazeOutputFrequencies(IEyeTracker eyeTracker)
+            {
+                Console.WriteLine("\nGaze output frequencies.");
+                // Get and store current frequency so it can be restored.
+                var initialGazeOutputFrequency = eyeTracker.GetGazeOutputFrequency();
+                Console.WriteLine("Gaze output frequency is: {0} hertz.", initialGazeOutputFrequency);
+                try
+                {
+                    // Get all gaze output frequencies.
+                    var allGazeOutputFrequencies = eyeTracker.GetAllGazeOutputFrequencies();
+                    foreach (var gazeOutputFrequency in allGazeOutputFrequencies)
+                    {
+                        if (gazeOutputFrequency < 110.0f)
+                        {
+                            initialGazeOutputFrequency = gazeOutputFrequency;
+                            eyeTracker.SetGazeOutputFrequency(gazeOutputFrequency);
+                            m_eyetrackerfrequency = gazeOutputFrequency;
+                        }
+                        //eyeTracker.SetGazeOutputFrequency(gazeOutputFrequency);
+                        //Console.WriteLine("New gaze output frequency is: {0} hertz.", gazeOutputFrequency.ToString());
+                    }
+                }
+                finally
+                {
+                    eyeTracker.SetGazeOutputFrequency(initialGazeOutputFrequency);
+                    Console.WriteLine("Gaze output frequency reset to: {0} hertz.", eyeTracker.GetGazeOutputFrequency());
+                }
+            }
+            // <EndExample>
+        }
+
         internal static class EyeTrackingOperations_FindAllEyeTrackers
         {
             internal static EyeTrackerCollection Execute(Form1 formObject)
@@ -253,7 +300,7 @@ namespace TobiiTesting1
                 var local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
                 var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
 
-                var t_str = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}\r\n",
+                var t_str = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}\r\n",
                     e.LeftEye.GazeOrigin.Validity,
                     e.LeftEye.GazeOrigin.PositionInUserCoordinates.X,
                     e.LeftEye.GazeOrigin.PositionInUserCoordinates.Y,
@@ -262,6 +309,7 @@ namespace TobiiTesting1
                     e.LeftEye.GazePoint.PositionOnDisplayArea.Y,
                     e.RightEye.GazePoint.PositionOnDisplayArea.X,
                     e.RightEye.GazePoint.PositionOnDisplayArea.Y,
+                    e.LeftEye.Pupil.Validity,
                     e.LeftEye.Pupil.PupilDiameter,
                     e.RightEye.Pupil.PupilDiameter,
                     UnixTimestamp,
@@ -834,7 +882,7 @@ namespace TobiiTesting1
                 local_timestamp = DateTimeOffset.Now.ToString("MM/dd/yyyy hh:mm:ss.fff").ToString();
                 UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
 
-                System.IO.File.WriteAllText(gazedatasavingpath, "DEVICE,X,Y,Z,LPDA_X,LPDA_Y,RPDA_X,RPDA_Y,Pupil_left,Pupil_right,UnixTS,TimeStamp\r\n");
+                System.IO.File.WriteAllText(gazedatasavingpath, "DEVICE,X,Y,Z,LPDA_X,LPDA_Y,RPDA_X,RPDA_Y,Pupil_VA,Pupil_left,Pupil_right,UnixTS,TimeStamp\r\n");
 
                 eyetrackingrecordenabled = true;
                 string t_str = String.Format("{{\"participant\":\"{0}\"," +
@@ -900,6 +948,11 @@ namespace TobiiTesting1
             
             
             b_trial_locked = !b_trial_locked;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            m_eyetrackerfrequency = float.Parse(textBox_pupil.Text);
         }
 
         class CallEyeTrackerManager
