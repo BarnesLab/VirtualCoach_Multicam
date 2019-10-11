@@ -288,7 +288,6 @@ namespace TobiiTesting1
             this.groupBox1.Controls.Add(this.checkBox_empatica_0);
             this.groupBox1.Controls.Add(this.bt_empatica);
             this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(21, 14);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
@@ -319,12 +318,12 @@ namespace TobiiTesting1
             this.checkBox_empatica_1.Checked = true;
             this.checkBox_empatica_1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox_empatica_1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.checkBox_empatica_1.Location = new System.Drawing.Point(361, 197);
+            this.checkBox_empatica_1.Location = new System.Drawing.Point(359, 190);
             this.checkBox_empatica_1.Margin = new System.Windows.Forms.Padding(2);
             this.checkBox_empatica_1.Name = "checkBox_empatica_1";
-            this.checkBox_empatica_1.Size = new System.Drawing.Size(63, 17);
+            this.checkBox_empatica_1.Size = new System.Drawing.Size(66, 17);
             this.checkBox_empatica_1.TabIndex = 22;
-            this.checkBox_empatica_1.Text = "023B64";
+            this.checkBox_empatica_1.Text = "3A4FCD";
             this.checkBox_empatica_1.UseVisualStyleBackColor = true;
             // 
             // checkBox_empatica_0
@@ -333,7 +332,7 @@ namespace TobiiTesting1
             this.checkBox_empatica_0.Checked = true;
             this.checkBox_empatica_0.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox_empatica_0.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.checkBox_empatica_0.Location = new System.Drawing.Point(361, 172);
+            this.checkBox_empatica_0.Location = new System.Drawing.Point(359, 174);
             this.checkBox_empatica_0.Margin = new System.Windows.Forms.Padding(2);
             this.checkBox_empatica_0.Name = "checkBox_empatica_0";
             this.checkBox_empatica_0.Size = new System.Drawing.Size(65, 17);
@@ -345,12 +344,12 @@ namespace TobiiTesting1
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.label9.Location = new System.Drawing.Point(345, 216);
+            this.label9.Location = new System.Drawing.Point(559, 525);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(117, 13);
+            this.label9.Size = new System.Drawing.Size(79, 13);
             this.label9.TabIndex = 20;
-            this.label9.Text = "acc,bvp,gsr,ibi,tmp,tag ";
+            this.label9.Text = "acc,bvp,ibi,tmp";
             // 
             // label_time
             // 
@@ -617,6 +616,7 @@ namespace TobiiTesting1
             this.Controls.Add(this.label10);
             this.Controls.Add(this.textBox_pupil);
             this.Controls.Add(this.button_endtask);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox_empatica);
             this.Controls.Add(this.label1_score_3);

@@ -29,6 +29,7 @@ using System.Timers;
 // This is the code for your desktop app.
 // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
 
+
 namespace TobiiTesting1
 {
     
@@ -523,6 +524,40 @@ namespace TobiiTesting1
             getCamList();
             addTaskList();
             SetTimer();
+            //setup empatica device name
+            ReadInitiatefile("virtualcoach.ini");
+        }
+
+        private void ReadInitiatefile(string filename)
+        {
+            //E4Wristband:AB2B64
+            //E4Wristband: 3A4FCD
+            if (System.IO.File.Exists(filename))
+            {
+                using (StreamReader reader = new StreamReader(filename))
+                {
+                    List<string> lines = new List<string>();
+                    while (!reader.EndOfStream)
+                    {
+                        string t_str=reader.ReadLine();
+                        if (t_str.Contains("E4Wristband"))
+                        {
+                            lines.Add(t_str.Replace("E4Wristband:", ""));
+                        }
+                    }
+                    if (lines.Count == 1)
+                    {
+                        checkBox_empatica_0.Text = lines[0];
+                    }
+                    else if (lines.Count > 1)
+                    {
+                        checkBox_empatica_0.Text = lines[0];
+                        checkBox_empatica_1.Text = lines[1];
+                    }
+                    
+                }
+            }
+
         }
 
         private void SetTimer()
@@ -620,13 +655,25 @@ namespace TobiiTesting1
                 {
                     if (checkBox_empatica_0.Checked)
                     {
-                        m_empatica_0.StartClient(checkBox_empatica_0.Text);
-                        checkBox_empatica_0.Enabled = false;
+                        if (m_empatica_0.StartClient(checkBox_empatica_0.Text))
+                        {
+                            checkBox_empatica_0.Enabled = false;
+                        }
+                        else
+                        {
+                            checkBox_empatica_0.Checked = false;
+                        }
                     }
                     if (checkBox_empatica_1.Checked)
                     {
-                        m_empatica_1.StartClient(checkBox_empatica_1.Text);
-                        checkBox_empatica_1.Enabled = false;
+                        if (m_empatica_1.StartClient(checkBox_empatica_1.Text))
+                        {
+                            checkBox_empatica_1.Enabled = false;
+                        }
+                        else
+                        {
+                            checkBox_empatica_1.Checked = false;
+                        }
                     }
                     
                     bt_empatica.Text = "Stop Empatica";

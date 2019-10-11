@@ -30,19 +30,21 @@ namespace TobiiTesting1
 
         private string m_record;//empatica data here
         public string m_str_empaticaDevice;
+        private bool m_deviceconnected = false;
 
         private string[] list_empatica_datatype_msg ={
                     "device_subscribe acc ON",
                     "device_subscribe bvp ON",
-                    "device_subscribe gsr ON",
                     "device_subscribe ibi ON",
-                    "device_subscribe tmp ON",
-                    "device_subscribe tag ON"
+                    "device_subscribe tmp ON"
                 };
+        //                    "device_subscribe gsr ON",
+        //,
+         //           "device_subscribe tag ON"
 
-        public void SetupEmpaticaData()
+        public void SetupEmpaticaDevice()
         {
-
+           
         }
 
         //023B64,AB2B64
@@ -118,6 +120,11 @@ namespace TobiiTesting1
                     ReceiveDone.WaitOne();
                     System.Threading.Thread.Sleep(500);//2000
                 }
+                if (!m_deviceconnected)
+                {
+                    return false;
+                }
+
                 foreach (string item in list_empatica_datatype_msg)
                 {
                     Send(client, item + Environment.NewLine);
@@ -126,7 +133,7 @@ namespace TobiiTesting1
                     ReceiveDone.WaitOne();
                     System.Threading.Thread.Sleep(100);//2000
                 }
-
+                return true;
                 /*
                 while (true)
                 {
@@ -308,6 +315,27 @@ namespace TobiiTesting1
                 //var t_str = String.Format("{0},{1},{2}\r\n",response.Replace(" ",","),unixTimestamp,local_timestamp);
                 m_record += response.Replace(" ", ",");
                 //System.IO.File.AppendAllText(empaticadatasavingpath, t_str);
+            }
+            
+            else
+            {
+                if (response.Contains("device_list"))
+                {
+                    String[] t_arr = response.Split('|');
+                    foreach (var word in t_arr)
+                    {
+                        String[] t_res = word.Split(' ');
+                        foreach (var code in t_res)
+                        {
+                            if (code.ToString() == m_str_empaticaDevice)
+                            {
+                                m_deviceconnected = true;
+                                Console.WriteLine(t_res[1] + "connected");
+                            }
+                        }
+
+                    }
+                }
             }
             
             //Console.Write("all here");
