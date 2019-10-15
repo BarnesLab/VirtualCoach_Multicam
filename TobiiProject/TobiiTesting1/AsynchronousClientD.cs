@@ -31,20 +31,29 @@ namespace TobiiTesting1
         private string m_record;//empatica data here
         public string m_str_empaticaDevice;
         private bool m_deviceconnected = false;
-
+        private string[] list_empatica_datatype_msg ={
+                    "device_subscribe bvp ON",
+                    "device_subscribe acc ON",
+                    "device_subscribe ibi ON",
+                    "device_subscribe tmp ON"
+                };
+        private int m_sleeptime = 1000;
+        /*
         private string[] list_empatica_datatype_msg ={
                     "device_subscribe acc ON",
                     "device_subscribe bvp ON",
                     "device_subscribe ibi ON",
                     "device_subscribe tmp ON"
                 };
+        */
         //                    "device_subscribe gsr ON",
         //,
-         //           "device_subscribe tag ON"
-
-        public void SetupEmpaticaDevice()
+        //           "device_subscribe tag ON"
+        
+        public void SetupEmpaticaDevice(string[] t_msg,int t_sleep=1000)
         {
-           
+            list_empatica_datatype_msg = t_msg;
+            m_sleeptime = t_sleep;
         }
 
         //023B64,AB2B64
@@ -111,14 +120,14 @@ namespace TobiiTesting1
                     "device_subscribe bat ON",
                     "device_subscribe tag ON" };
                 */
-                System.Threading.Thread.Sleep(1000);//2000
+                System.Threading.Thread.Sleep(m_sleeptime);//2000
                 foreach (string item in list_empatica_device_management_msg)
                 {
                     Send(client, item + Environment.NewLine);
                     SendDone.WaitOne();
                     Receive(client);
                     ReceiveDone.WaitOne();
-                    System.Threading.Thread.Sleep(500);//2000
+                    System.Threading.Thread.Sleep(m_sleeptime);//2000
                 }
                 if (!m_deviceconnected)
                 {
@@ -131,7 +140,7 @@ namespace TobiiTesting1
                     SendDone.WaitOne();
                     Receive(client);
                     ReceiveDone.WaitOne();
-                    System.Threading.Thread.Sleep(100);//2000
+                    System.Threading.Thread.Sleep(m_sleeptime);//2000
                 }
                 return true;
                 /*

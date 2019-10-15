@@ -537,12 +537,22 @@ namespace TobiiTesting1
                 using (StreamReader reader = new StreamReader(filename))
                 {
                     List<string> lines = new List<string>();
+                    List<string> t_subscribe = new List<string>();
+                    int t_sleep = 1000;
                     while (!reader.EndOfStream)
                     {
                         string t_str=reader.ReadLine();
-                        if (t_str.Contains("E4Wristband"))
+                        if (t_str.Contains("E4Wristband:"))
                         {
                             lines.Add(t_str.Replace("E4Wristband:", ""));
+                        }
+                        else if (t_str.Contains("E4Sleeptime:"))
+                        {
+                            t_sleep = Convert.ToInt32(t_str.Replace("E4Sleeptime:", ""));
+                        }
+                        else if (t_str.Contains("E4Subscribe:"))
+                        {
+                            t_subscribe.Add(t_str.Replace("E4Subscribe:", "device_subscribe ") +" ON");
                         }
                     }
                     if (lines.Count == 1)
@@ -554,7 +564,8 @@ namespace TobiiTesting1
                         checkBox_empatica_0.Text = lines[0];
                         checkBox_empatica_1.Text = lines[1];
                     }
-                    
+                    m_empatica_0.SetupEmpaticaDevice(t_subscribe.ToArray(), t_sleep);
+                    m_empatica_1.SetupEmpaticaDevice(t_subscribe.ToArray(), t_sleep);
                 }
             }
 

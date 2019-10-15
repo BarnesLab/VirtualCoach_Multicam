@@ -288,6 +288,7 @@ namespace TobiiTesting1
             this.groupBox1.Controls.Add(this.checkBox_empatica_0);
             this.groupBox1.Controls.Add(this.bt_empatica);
             this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(21, 14);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
@@ -344,7 +345,7 @@ namespace TobiiTesting1
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.label9.Location = new System.Drawing.Point(559, 525);
+            this.label9.Location = new System.Drawing.Point(358, 209);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(79, 13);
@@ -616,7 +617,6 @@ namespace TobiiTesting1
             this.Controls.Add(this.label10);
             this.Controls.Add(this.textBox_pupil);
             this.Controls.Add(this.button_endtask);
-            this.Controls.Add(this.label9);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox_empatica);
             this.Controls.Add(this.label1_score_3);
