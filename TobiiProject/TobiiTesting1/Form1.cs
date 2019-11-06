@@ -1025,13 +1025,41 @@ namespace TobiiTesting1
             // <BeginExample>
             private static void CallEyeTrackerManagerExample(IEyeTracker eyeTracker)
             {
-                string etmStartupMode = "usercalibration";// "usercalibration";// "displayarea";//"--version"
-                string etmBasePath = Path.GetFullPath(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"),
-                                                                    "TobiiProEyeTrackerManager"));
-                string appFolder = Directory.EnumerateDirectories(etmBasePath, "app*").FirstOrDefault();
-                string executablePath = Path.GetFullPath(Path.Combine(etmBasePath,
-                                                                        appFolder,
-                                                                        "TobiiProEyeTrackerManager.exe"));
+                /*
+                 * Remarks
+                    System environment variables define the behavior of the global operating system environment. Local environment variables define the behavior of the environment of the current user session.
+
+                    The following is a selection of valid environment variables:
+
+                    ALLUSERSPROFILE=C:\ProgramData
+                    APPDATA=C:\Users\user\AppData\Roaming
+                    HOMEPATH=\Users\user
+                    LOCALAPPDATA=C:\Users\user\AppData\Local
+                    PROGRAMDATA=C:\ProgramData
+                    PUBLIC=C:\Users\Public
+                    TEMP=C:\Users\user\AppData\Local\Temp
+                    TMP=C:\Users\user\AppData\Local\Temp
+                    USERPROFILE=C:\Users\user
+                */
+                string etmStartupMode = "usercalibration";// "usercalibration";// "displayarea";//"--version"//"displayarea"
+                string executablePath="";
+
+                string etmBasePath = Path.GetFullPath(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"),"TobiiProEyeTrackerManager"));
+                if (Directory.Exists(etmBasePath))
+                {
+                    string appFolder = Directory.EnumerateDirectories(etmBasePath, "app*").FirstOrDefault();
+                    executablePath = Path.GetFullPath(Path.Combine(etmBasePath,
+                                                                       appFolder,
+                                                                       "TobiiProEyeTrackerManager.exe"));
+                }
+                else
+                {
+                    etmBasePath = Path.GetFullPath(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), "programs/TobiiProEyeTrackerManager"));
+                    executablePath = Path.GetFullPath(Path.Combine(etmBasePath, "TobiiProEyeTrackerManager.exe"));
+                }
+                
+
+
                 string arguments = "--device-address=" + eyeTracker.Address + " --mode=" + etmStartupMode;
                 try
                 {
