@@ -916,15 +916,32 @@ namespace TobiiTesting1
                 //m_empaticarunning = true;
                 if (m_empaticarunning)
                 {
-                    if (checkBox_empatica_0.Checked)
+                    //revised on 11/25/2019
+                    //if checked record all empatica data into one file
+                    if (checkBox_empatica_record.Checked)
                     {
-                        m_empatica_0.SavingRecord(m_savingfolder, trialinfo);
+                        string t_empatica_taskinfo = String.Format("task{0}_wholetrial_{1}", task_list_log[comboBox1.SelectedIndex], UnixTimestamp);
+                        if (checkBox_empatica_0.Checked)
+                        {
+                            m_empatica_0.SavingRecord(m_savingfolder, t_empatica_taskinfo);
+                        }
+                        if (checkBox_empatica_1.Checked)
+                        {
+                            m_empatica_1.SavingRecord(m_savingfolder, t_empatica_taskinfo);
+                        }
                     }
-                    if (checkBox_empatica_1.Checked)
+                    else
                     {
-                        m_empatica_1.SavingRecord(m_savingfolder, trialinfo);
+                        if (checkBox_empatica_0.Checked)
+                        {
+                            m_empatica_0.SavingRecord(m_savingfolder, trialinfo);
+                        }
+                        if (checkBox_empatica_1.Checked)
+                        {
+                            m_empatica_1.SavingRecord(m_savingfolder, trialinfo);
+                        }
+                                                
                     }
-
                     timer_empatica.Enabled = true;
                 }
                 //m_empaticarunning = false;
@@ -977,7 +994,17 @@ namespace TobiiTesting1
                 {
                     item.StopRecording();
                 }
-                timer_empatica.Enabled = false;
+                // revised on 11/25/2019
+                // if checked, all empatica will be stored in a whole file 
+                if (checkBox_empatica_record.Checked)
+                {
+                    //pass
+                }
+                else
+                {
+                    timer_empatica.Enabled = false;
+                }
+                
                 eyetrackingrecordenabled = false;
                 //write end timestamp into the file
                 //str_trial = String.Format("{0},{1},{2},Trial,END,{3},{4}", textBox_participant.Text, UnixTimestamp, local_timestamp, task_list_log[comboBox1.SelectedIndex], trialIndex.Text);
