@@ -95,6 +95,8 @@ namespace TobiiTesting1
         private static bool m_starttimer;
 
         private static float m_eyetrackerfrequency = 120;
+
+        private static bool m_baselinestarted = false;
         
         public Form1()
         {
@@ -351,6 +353,7 @@ namespace TobiiTesting1
         }
         private void save_Click(object sender, EventArgs e)
         {
+            button4.Enabled = true;
             saveAvi = new SaveFileDialog();
             //saveAvi.Filter = "Txt Files (*.txt)|*.txt";
             saveAvi.FileName = DateTimeOffset.Now.ToString("MM_dd_yy_hh_mm_ss");//saveAvi.FileName= DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
@@ -1038,6 +1041,29 @@ namespace TobiiTesting1
         private void button3_Click(object sender, EventArgs e)
         {
             m_eyetrackerfrequency = float.Parse(textBox_pupil.Text);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (!m_baselinestarted)
+            {
+                trialIndex.Text = "0";
+                bt_trial_Click(sender, e);
+                m_baselinestarted = !m_baselinestarted;
+            }
+            else if (m_baselinestarted)
+            {
+                bt_trial_Click(sender, e);
+                bt_enter_Click(sender, e);
+                trialIndex.Text = "1";
+                button4.Enabled = false;
+            }
+                        
+        }
+
+        private void trialIndex_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         class CallEyeTrackerManager

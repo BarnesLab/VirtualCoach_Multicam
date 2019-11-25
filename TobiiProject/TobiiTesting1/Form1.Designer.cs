@@ -79,6 +79,7 @@ namespace TobiiTesting1
             this.button3 = new System.Windows.Forms.Button();
             this.label_pupil = new System.Windows.Forms.Label();
             this.checkBox_empatica_record = new System.Windows.Forms.CheckBox();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -141,7 +142,7 @@ namespace TobiiTesting1
             this.save.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
             this.save.Location = new System.Drawing.Point(21, 263);
             this.save.Name = "save";
-            this.save.Size = new System.Drawing.Size(455, 54);
+            this.save.Size = new System.Drawing.Size(292, 54);
             this.save.TabIndex = 10;
             this.save.Text = "Start Session";
             this.save.UseVisualStyleBackColor = true;
@@ -168,8 +169,9 @@ namespace TobiiTesting1
             this.trialIndex.Name = "trialIndex";
             this.trialIndex.Size = new System.Drawing.Size(252, 23);
             this.trialIndex.TabIndex = 12;
-            this.trialIndex.Text = "1";
+            this.trialIndex.Text = "0";
             this.trialIndex.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.trialIndex.TextChanged += new System.EventHandler(this.trialIndex_TextChanged);
             // 
             // label1
             // 
@@ -622,11 +624,25 @@ namespace TobiiTesting1
             this.checkBox_empatica_record.Text = "RecordAll";
             this.checkBox_empatica_record.UseVisualStyleBackColor = true;
             // 
+            // button4
+            // 
+            this.button4.Enabled = false;
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
+            this.button4.Location = new System.Drawing.Point(319, 263);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(159, 54);
+            this.button4.TabIndex = 47;
+            this.button4.Text = "Baseline: 2 min";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.UseWaitCursor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1193, 658);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.label_pupil);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label10);
@@ -731,6 +747,7 @@ namespace TobiiTesting1
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label_pupil;
         private System.Windows.Forms.CheckBox checkBox_empatica_record;
+        private System.Windows.Forms.Button button4;
     }
 }
 
