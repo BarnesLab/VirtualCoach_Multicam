@@ -35,7 +35,8 @@ namespace TobiiTesting1
                     "device_subscribe bvp ON",
                     "device_subscribe acc ON",
                     "device_subscribe ibi ON",
-                    "device_subscribe tmp ON"
+                    "device_subscribe tmp ON",
+                    "device_subscribe gsr ON"// added on 11/25/19
                 };
         private int m_sleeptime = 1000;
         /*
