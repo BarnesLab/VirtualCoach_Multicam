@@ -51,6 +51,7 @@ namespace TobiiTesting1
             this.checkBox_face = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox_empatica_record = new System.Windows.Forms.CheckBox();
             this.checkBox_thermalapi = new System.Windows.Forms.CheckBox();
             this.checkBox_empatica_1 = new System.Windows.Forms.CheckBox();
             this.checkBox_empatica_0 = new System.Windows.Forms.CheckBox();
@@ -78,7 +79,6 @@ namespace TobiiTesting1
             this.label10 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.label_pupil = new System.Windows.Forms.Label();
-            this.checkBox_empatica_record = new System.Windows.Forms.CheckBox();
             this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -301,6 +301,19 @@ namespace TobiiTesting1
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Device";
+            // 
+            // checkBox_empatica_record
+            // 
+            this.checkBox_empatica_record.AutoSize = true;
+            this.checkBox_empatica_record.Checked = true;
+            this.checkBox_empatica_record.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_empatica_record.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.checkBox_empatica_record.Location = new System.Drawing.Point(357, 166);
+            this.checkBox_empatica_record.Name = "checkBox_empatica_record";
+            this.checkBox_empatica_record.Size = new System.Drawing.Size(72, 17);
+            this.checkBox_empatica_record.TabIndex = 24;
+            this.checkBox_empatica_record.Text = "RecordAll";
+            this.checkBox_empatica_record.UseVisualStyleBackColor = true;
             // 
             // checkBox_thermalapi
             // 
@@ -611,19 +624,6 @@ namespace TobiiTesting1
             this.label_pupil.Size = new System.Drawing.Size(0, 13);
             this.label_pupil.TabIndex = 46;
             // 
-            // checkBox_empatica_record
-            // 
-            this.checkBox_empatica_record.AutoSize = true;
-            this.checkBox_empatica_record.Checked = true;
-            this.checkBox_empatica_record.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_empatica_record.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.checkBox_empatica_record.Location = new System.Drawing.Point(357, 166);
-            this.checkBox_empatica_record.Name = "checkBox_empatica_record";
-            this.checkBox_empatica_record.Size = new System.Drawing.Size(72, 17);
-            this.checkBox_empatica_record.TabIndex = 24;
-            this.checkBox_empatica_record.Text = "RecordAll";
-            this.checkBox_empatica_record.UseVisualStyleBackColor = true;
-            // 
             // button4
             // 
             this.button4.Enabled = false;
@@ -632,7 +632,7 @@ namespace TobiiTesting1
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(159, 54);
             this.button4.TabIndex = 47;
-            this.button4.Text = "Baseline: 2 min";
+            this.button4.Text = "Baseline: 3 min";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.UseWaitCursor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);

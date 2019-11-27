@@ -354,6 +354,8 @@ namespace TobiiTesting1
         private void save_Click(object sender, EventArgs e)
         {
             button4.Enabled = true;
+            m_baselinestarted = false;
+
             saveAvi = new SaveFileDialog();
             //saveAvi.Filter = "Txt Files (*.txt)|*.txt";
             saveAvi.FileName = DateTimeOffset.Now.ToString("MM_dd_yy_hh_mm_ss");//saveAvi.FileName= DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
@@ -923,7 +925,7 @@ namespace TobiiTesting1
                     //if checked record all empatica data into one file
                     if (checkBox_empatica_record.Checked)
                     {
-                        string t_empatica_taskinfo = String.Format("task{0}_wholetrial_{1}", task_list_log[comboBox1.SelectedIndex], UnixTimestamp);
+                        string t_empatica_taskinfo = String.Format("task{0}_wholetrial", task_list_log[comboBox1.SelectedIndex]);
                         if (checkBox_empatica_0.Checked)
                         {
                             m_empatica_0.SavingRecord(m_savingfolder, t_empatica_taskinfo);

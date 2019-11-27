@@ -181,14 +181,19 @@ namespace TobiiTesting1
             //var local_timestamp = DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
             //empaticadatasavingpath = filepath + m_str_empaticaDevice + "_EP.txt";
             empaticadatasavingpath = String.Format("{0}\\EP{1}_{2}.txt", filepath, m_str_empaticaDevice, trialinfo);
-            
+
             if (!System.IO.File.Exists(empaticadatasavingpath))
             {
                 //create file
                 using (var t_file = System.IO.File.Create(empaticadatasavingpath)) ;
+                System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA\r\n");
             }
+            else
+            {
 
-            System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA\r\n");
+            }
+            //System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA\r\n");
+            
 
         }
 
