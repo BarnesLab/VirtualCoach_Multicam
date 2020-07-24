@@ -43,8 +43,7 @@ namespace TobiiTesting1
 
         Point[] m_points=new Point[60*80];// w=80,h=60
 
-        public static string m_allcvs;
-        private int ncount = 0;
+        public static string m_allcsv;
         //private string m_imagefolder;
         public MainWindow()
         {
@@ -200,8 +199,8 @@ namespace TobiiTesting1
 
             timer2.Enabled = false;
 
-            System.IO.File.AppendAllText(m_csvfilename, m_allcvs);
-            m_allcvs = "";
+            System.IO.File.AppendAllText(m_csvfilename, m_allcsv);
+            m_allcsv = "";
             
         }
         private void MainWindow_Load(object sender, EventArgs e)
@@ -220,7 +219,7 @@ namespace TobiiTesting1
             h = 60;
             w = 80;
 
-            m_allcvs = "";
+            m_allcsv = "";
             FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Default, 1000000);
             //FileWriter.Open(videofilepath, w, h, 25, VideoCodec.Raw);
             //FileWriter.Open(videofilepath, w, h);
@@ -234,10 +233,11 @@ namespace TobiiTesting1
             //System.IO.Directory.CreateDirectory(m_imagefolder);
             if (checkBox_csv.Checked)
             {
-                if (!System.IO.File.Exists(m_csvfilename))
+                if (!File.Exists(m_csvfilename))
                 {
                     //create file
-                    using (var t_file = System.IO.File.Create(m_csvfilename)) ;
+                    using (var t_file = File.Create(m_csvfilename))
+                    { }
                 }
                 //m_fs= new FileStream(m_csvfilename, FileMode.Open, FileAccess.Write,FileShare.ReadWrite);
             }
@@ -295,7 +295,7 @@ namespace TobiiTesting1
             }
         }
 
-        public async void SaveToCsv(double[,] pixel_array)
+        public void SaveToCsv(double[,] pixel_array)
         {
             var UnixTimestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
 
@@ -319,7 +319,7 @@ namespace TobiiTesting1
                 }
             }
             line += "\r\n";
-            m_allcvs += line;
+            m_allcsv += line;
             //System.IO.File.AppendAllText(m_csvfilename, line);
             /*
             byte[] encodedText = Encoding.Unicode.GetBytes(line);
@@ -335,8 +335,8 @@ namespace TobiiTesting1
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            string t_str = m_allcvs;
-            m_allcvs = "";
+            string t_str = m_allcsv;
+            m_allcsv = "";
             System.IO.File.AppendAllText(m_csvfilename, t_str);
         }
     }

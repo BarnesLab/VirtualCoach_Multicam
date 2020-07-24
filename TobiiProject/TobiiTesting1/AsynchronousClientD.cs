@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -7,7 +8,7 @@ using Tobii.Research;
 
 namespace TobiiTesting1
 {
-    public class AsynchronousClientD
+    public class AsynchronousClientD: IObservable<string>
     {
         // The port number for the remote device.
         //device id: 023b64
@@ -23,6 +24,8 @@ namespace TobiiTesting1
 
         // The response from the remote device.
         private String _response = String.Empty;
+
+        private List<IObserver<string>> _observers = new List<IObserver<string>>();
 
         private Socket client;
         private bool m_startsaving;
@@ -50,7 +53,27 @@ namespace TobiiTesting1
         //                    "device_subscribe gsr ON",
         //,
         //           "device_subscribe tag ON"
-        
+
+        private class Unsubscriber: IDisposable
+        {
+            private List<IObserver<string>> _observers;
+            private IObserver<string> _observer;
+
+            public Unsubscriber(List<IObserver<string>> observers, IObserver<string> observer)
+            {
+                _observers = observers;
+                _observer = observer;
+            }
+
+            public void Dispose()
+            {
+                if (_observer != null && _observers.Contains(_observer))
+                {
+                    _observers.Remove(_observer);
+                }
+            }
+        }
+
         public void SetupEmpaticaDevice(string[] t_msg,int t_sleep=1000)
         {
             list_empatica_datatype_msg = t_msg;
@@ -85,7 +108,6 @@ namespace TobiiTesting1
                     Console.WriteLine("start client");
                 }
                 
-
                 /* 
                  * device_connect 9ff167
                  * R device_connect OK
@@ -160,8 +182,8 @@ namespace TobiiTesting1
                 Console.WriteLine(e.ToString());
                 return false;
             }
-            return true;
         }
+
         public void StopClient()
         {
             m_startsaving = false;
@@ -170,7 +192,6 @@ namespace TobiiTesting1
             Receive(client);
             ReceiveDone.WaitOne();
         }
-
 
         public void SavingRecord(string filepath,string trialinfo)
         {
@@ -184,8 +205,6 @@ namespace TobiiTesting1
 
             if (!System.IO.File.Exists(empaticadatasavingpath))
             {
-                //create file
-                using (var t_file = System.IO.File.Create(empaticadatasavingpath)) ;
                 System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA\r\n");
             }
             else
@@ -330,6 +349,11 @@ namespace TobiiTesting1
                 //var t_str = String.Format("{0},{1},{2}\r\n",response.Replace(" ",","),unixTimestamp,local_timestamp);
                 m_record += response.Replace(" ", ",");
                 //System.IO.File.AppendAllText(empaticadatasavingpath, t_str);
+
+                foreach (var observer in _observers)
+                {
+                    observer.OnNext(response.Replace(" ", ","));
+                }
             }
             
             else
@@ -360,19 +384,22 @@ namespace TobiiTesting1
         {
             //for eyegazedata
             //var systemTimeStamp = EyeTrackingOperations.GetSystemTimeStamp();
-            var local_timestamp = DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
+            //var local_timestamp = DateTimeOffset.Now.ToString("MM_dd_yyyy hh_mm_ss");
             //string t_txtfilename = String.Format("_EP_{0}.txt", local_timestamp);
             //var Timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
             empaticadatasavingpath = filepath.Replace(".", "_") + "EP.txt";
 
-            if (!System.IO.File.Exists(empaticadatasavingpath))
+            System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA\r\n");
+        }
+
+        public IDisposable Subscribe(IObserver<string> observer)
+        {
+            if (!_observers.Contains(observer))
             {
-                //create file
-                using (var t_file = System.IO.File.Create(empaticadatasavingpath)) ;
+                _observers.Add(observer);
             }
 
-            System.IO.File.WriteAllText(empaticadatasavingpath, "STREAM_TYPE,EP_TIMESTAMP,DATA\r\n");
-
+            return new Unsubscriber(_observers, observer);
         }
     }
 }

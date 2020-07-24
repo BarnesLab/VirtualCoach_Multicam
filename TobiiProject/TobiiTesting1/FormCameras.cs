@@ -36,7 +36,6 @@ namespace TobiiTesting1
         public Bitmap videoimg;
 
         private VideoFileWriter FileWriter = new VideoFileWriter();
-        private SaveFileDialog saveAvi;
         public bool m_startrecording;
         public int m_index;//index in the listview
         private int w= 1280, h= 720;
